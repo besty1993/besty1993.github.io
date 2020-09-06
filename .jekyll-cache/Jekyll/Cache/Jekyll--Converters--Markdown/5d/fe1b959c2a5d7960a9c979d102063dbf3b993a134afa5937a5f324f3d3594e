@@ -1,0 +1,156 @@
+I"Z?<p>NetCDF4 데이터를 읽어서 다음과 같이 가시화해보겠다.</p>
+
+<p><img src="/assets/images/ts_uv_final.png" alt="ts_uv_final" /></p>
+
+<p>사용 데이터는 Hycom 재분석 자료이며, 관련 링크는 다음과 같다.</p>
+<ul>
+  <li><a href="https://www.hycom.org/">Hycom Homepage</a></li>
+  <li><a href="ftp://ftp.hycom.org/datasets/GLBv0.08/expt_93.0/data/hindcasts/2020/">Hycom FTP</a></li>
+</ul>
+
+<p>파일의 마지막에 ts3z라 적혀 있으면 수온 및 염분 데이터, uv3z는 유속 UV 데이터이다. 그리고 ssh는 수위이다.<br />
+우리가 가시화하고자 하는 데이터는 수온과 UV를 사용하므로 이 두가지를 저장하자.<br />
+시간대는 아무거나 상관없다.</p>
+
+<p><br /></p>
+
+<h1 id="netcdf4-설치">NetCDF4 설치</h1>
+<p>NetCDF4 파일을 읽기 위해서는 NetCDF4를 읽을 수 있는 라이브러리가 필요하다.</p>
+
+<p>마찬가지로 설치하도록 하자.</p>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">conda install -c anaconda netcdf4
+</span></code></pre></div></div>
+
+<p><br /></p>
+
+<h1 id="netcdf4-파일-읽기">NetCDF4 파일 읽기</h1>
+
+<p>NetCDF4 모듈의 설명서는 다음의 링크에 있다.</p>
+<ul>
+  <li><a href="https://unidata.github.io/netcdf4-python/netCDF4/index.html">NetCDF4 API documentation</a></li>
+</ul>
+
+<p>위의 링크를 참조하면 NetCDF4 파일을 다음과 같이 읽거나 쓸 수 있다고 한다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rootgrp</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s">"test.nc"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s">"NETCDF4"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">rootgrp</span><span class="p">.</span><span class="n">data_model</span><span class="p">)</span>
+<span class="n">NETCDF4</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rootgrp</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>우리는 데이터를 읽고자 하므로 <code class="language-plaintext highlighter-rouge">"w"</code>가 아닌 <code class="language-plaintext highlighter-rouge">"r"</code>로 바꿔주자.</p>
+
+<p>이 후 한번 출력해보면 다음과 같이 나온다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">nc_data</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s">"hycom_glbv_930_2019010112_t000_ts3z_r.nc"</span><span class="p">,</span>\
+                      <span class="s">"r"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s">"NETCDF4"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">nc_data</span><span class="p">)</span>
+
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">netCDF4</span><span class="p">.</span><span class="n">_netCDF4</span><span class="p">.</span><span class="n">Dataset</span><span class="s">'&gt;
+root group (NETCDF3_64BIT_OFFSET data model, file format NETCDF3):
+    classification_level: UNCLASSIFIED
+    distribution_statement: Approved for public release. Distribution unlimited.
+    downgrade_date: not applicable
+    classification_authority: not applicable
+    institution: Naval Oceanographic Office
+    source: HYCOM archive file
+    history: Wed Sep 18 16:05:41 2019: ncks -d lon,115.,155. -d lat,18.,58. hycom_glbv_930_2019010112_t000_ts3z.nc hycom_glbv_930_2019010112_t000_ts3z_r.nc
+archv2ncdf3z
+    field_type: instantaneous
+    Conventions: CF-1.6 NAVO_netcdf_v1.1
+    NCO: 4.7.2
+    dimensions(sizes): depth(40), lat(726), lon(500), time(1)
+    variables(dimensions): float64 depth(depth), float64 lat(lat), float64 lon(lon), int16 salinity(time,depth,lat,lon), int16 salinity_bottom(time,lat,lon), float64 tau(time), float64 time(time), int16 water_temp(time,depth,lat,lon), int16 water_temp_bottom(time,lat,lon)
+    groups: 
+
+</span></code></pre></div></div>
+
+<p>파일의 기본적인 정보(메타 데이터)가 전부 나오는데, 예를 들면 차원은 <strong>깊이, 위도, 경도, 시간</strong> 총 4개이며, 깊이는 40개, 위도는 726개, 경도는 500개, 시간은 1개가 있다는 것을 알 수 있다. 또한, 이 파일이 가지고 있는 데이터로는 <strong>깊이, 위도, 경도 이외에도 염분, 해저 염분, 시간 간격, 시간, 수온, 해저 수온</strong>이 있다.</p>
+
+<p>우리가 필요한 것은 해수면 온도이므로, depth를 한 번 살펴보자</p>
+
+<p>depth의 메타 데이터는 다음과 같이 볼 수 있다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">nc_data</span><span class="p">[</span><span class="s">'depth'</span><span class="p">])</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">netCDF4</span><span class="p">.</span><span class="n">_netCDF4</span><span class="p">.</span><span class="n">Variable</span><span class="s">'&gt;
+float64 depth(depth)
+    long_name: Depth
+    standard_name: depth
+    units: m
+    positive: down
+    axis: Z
+    NAVO_code: 5
+unlimited dimensions: 
+current shape = (40,)
+filling on, default _FillValue of 9.969209968386869e+36 used
+</span></code></pre></div></div>
+
+<p>또한, 데이터는 다음과 같이 뽑아볼 수 있다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">nc_data</span><span class="p">[</span><span class="s">'depth'</span><span class="p">][:])</span>
+<span class="p">[</span><span class="mf">0.00e+00</span> <span class="mf">2.00e+00</span> <span class="mf">4.00e+00</span> <span class="mf">6.00e+00</span> <span class="mf">8.00e+00</span> <span class="mf">1.00e+01</span> <span class="mf">1.20e+01</span> <span class="mf">1.50e+01</span>
+ <span class="mf">2.00e+01</span> <span class="mf">2.50e+01</span> <span class="mf">3.00e+01</span> <span class="mf">3.50e+01</span> <span class="mf">4.00e+01</span> <span class="mf">4.50e+01</span> <span class="mf">5.00e+01</span> <span class="mf">6.00e+01</span>
+ <span class="mf">7.00e+01</span> <span class="mf">8.00e+01</span> <span class="mf">9.00e+01</span> <span class="mf">1.00e+02</span> <span class="mf">1.25e+02</span> <span class="mf">1.50e+02</span> <span class="mf">2.00e+02</span> <span class="mf">2.50e+02</span>
+ <span class="mf">3.00e+02</span> <span class="mf">3.50e+02</span> <span class="mf">4.00e+02</span> <span class="mf">5.00e+02</span> <span class="mf">6.00e+02</span> <span class="mf">7.00e+02</span> <span class="mf">8.00e+02</span> <span class="mf">9.00e+02</span>
+ <span class="mf">1.00e+03</span> <span class="mf">1.25e+03</span> <span class="mf">1.50e+03</span> <span class="mf">2.00e+03</span> <span class="mf">2.50e+03</span> <span class="mf">3.00e+03</span> <span class="mf">4.00e+03</span> <span class="mf">5.00e+03</span><span class="p">]</span>
+</code></pre></div></div>
+<p>해수면은 0번째 index에 있는 것을 알 수 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nc_data</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s">"hycom_glbv_930_2019010112_t000_ts3z_r.nc"</span><span class="p">,</span>\
+                  <span class="s">"r"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s">"NETCDF4"</span><span class="p">)</span>
+<span class="n">nc_data2</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s">"hycom_glbv_930_2019010112_t000_uv3z_r.nc"</span><span class="p">,</span>\
+                  <span class="s">"r"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s">"NETCDF4"</span><span class="p">)</span>
+
+<span class="n">depth</span> <span class="o">=</span> <span class="n">nc_data</span><span class="p">[</span><span class="s">'depth'</span><span class="p">][:]</span>             <span class="c1">## 수심
+</span><span class="n">lat</span> <span class="o">=</span> <span class="n">nc_data</span><span class="p">[</span><span class="s">'lat'</span><span class="p">][:]</span>                 <span class="c1">## 위도
+</span><span class="n">lon</span> <span class="o">=</span> <span class="n">nc_data</span><span class="p">[</span><span class="s">'lon'</span><span class="p">][:]</span>                 <span class="c1">## 경도
+</span>
+<span class="n">water_temp</span> <span class="o">=</span> <span class="n">nc_data</span><span class="p">[</span><span class="s">'water_temp'</span><span class="p">][:]</span>   <span class="c1">## 수온 데이터
+</span><span class="n">sal</span> <span class="o">=</span> <span class="n">nc_data</span><span class="p">[</span><span class="s">'salinity'</span><span class="p">][:]</span>            <span class="c1">## 염분 데이터
+</span><span class="n">water_u</span> <span class="o">=</span> <span class="n">nc_data2</span><span class="p">[</span><span class="s">'water_u'</span><span class="p">][:]</span>        <span class="c1">## 유향/유속 U
+</span><span class="n">water_v</span> <span class="o">=</span> <span class="n">nc_data2</span><span class="p">[</span><span class="s">'water_v'</span><span class="p">][:]</span>        <span class="c1">## 유향/유속 V
+</span>
+<span class="n">water_temp</span> <span class="o">=</span> <span class="n">water_temp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">water_u</span> <span class="o">=</span> <span class="n">water_u</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">water_v</span> <span class="o">=</span> <span class="n">water_v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h1 id="수온-가시화">수온 가시화</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">patch</span><span class="p">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s">'w'</span><span class="p">)</span>
+
+<span class="c1"># 수온 Contourf
+</span><span class="n">water_temp_plot</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">water_temp</span><span class="p">,</span>\
+                              <span class="n">levels</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'jet'</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">water_temp_plot</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">31</span><span class="p">,</span><span class="mi">5</span><span class="p">)))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+<p><img src="/assets/images/water_temp.png" alt="water_temp" /></p>
+
+<p><br /></p>
+
+<h1 id="유속-유향-가시화">유속, 유향 가시화</h1>
+
+<p>여기에 UV를 추가해주자</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ax</span><span class="p">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">water_u</span><span class="p">,</span> <span class="n">water_v</span><span class="p">,</span>\
+          <span class="n">pivot</span><span class="o">=</span><span class="s">'mid'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+<p>다만 이렇게 하면 quiver가 너무 많아서 그림이 지저분해지므로 step을 주자</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">step</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">lon</span><span class="p">[::</span><span class="n">step</span><span class="p">,::</span><span class="n">step</span><span class="p">],</span> <span class="n">lat</span><span class="p">[::</span><span class="n">step</span><span class="p">,::</span><span class="n">step</span><span class="p">],</span>
+           <span class="n">water_u</span><span class="p">[::</span><span class="n">step</span><span class="p">,::</span><span class="n">step</span><span class="p">],</span> <span class="n">water_v</span><span class="p">[::</span><span class="n">step</span><span class="p">,::</span><span class="n">step</span><span class="p">],</span>
+           <span class="n">pivot</span><span class="o">=</span><span class="s">'mid'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/ts_uv.png" alt="ts_uv" /></p>
+
+<p>여기까지도 꽤나 이쁘게 보이지만 다음 포스트에서는 여기에 추가로 지도를 추가해보겠다.</p>
+:ET
