@@ -21,7 +21,7 @@ title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "Chase Yang"
 description              : "Random Blog Posting Random Things"
-url                      : "https://besty1993.github.io"# the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : "https://besty1993.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : besty1993/besty1993.github.io # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
@@ -94,26 +94,43 @@ analytics:
 # Site Author
 author:
   name             : "Chase Yang"
-  avatar           : "assets/images/profile.jpg"
-  bio              : "좀 늦게 공부가 재밌어진 개발자"
+  avatar            : "assets/images/profile.jpg"
+  bio               : "우린 부자가 될꺼야!"
   location         : "Seoul, Republic of Korea"
   email            : "yang8571@gmail.com"
   links:
     - label: "Website"
       icon: "fas fa-fw fa-link"
       url: "https://besty1993.github.io"
-#    - label: "Twitter"
-#      icon: "fab fa-fw fa-twitter-square"
-#      # url: "https://twitter.com/"
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      # url: "https://twitter.com/"
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
-      url: "https://www.facebook.com/besty8571"
+      # url: "https://www.facebook.com/besty8571"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/besty1993"
-#    - label: "Instagram"
-#      icon: "fab fa-fw fa-instagram"
-#      # url: "https://instagram.com/"
+    - label: "Instagram"
+      icon: "fab fa-fw fa-instagram"
+      # url: "https://instagram.com/"
+
+  # links:
+  #   - label: "Website"
+  #     icon: "fas fa-fw fa-link"
+  #     url: "https://besty1993.github.io"
+  #  - label: "Twitter"
+  #    icon: "fab fa-fw fa-twitter-square"
+  #    # url: "https://twitter.com/"
+  #   - label: "Facebook"
+  #     icon: "fab fa-fw fa-facebook-square"
+  #     url: "https://www.facebook.com/besty8571"
+  #   - label: "GitHub"
+  #     icon: "fab fa-fw fa-github"
+  #     url: "https://github.com/besty1993"
+  #  - label: "Instagram"
+  #    icon: "fab fa-fw fa-instagram"
+  #    # url: "https://instagram.com/"
 
 # Site Footer
 footer:
@@ -284,7 +301,7 @@ defaults:
     values:
       layout: single
       author_profile: true
-      class: wide
+      classes: wide
 
   # _pages
   - scope:
