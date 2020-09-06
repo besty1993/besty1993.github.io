@@ -1,15 +1,15 @@
 ---
-title:  "읽을 책들"
+title:  "괜찮은 무료 웹북들"
 layout: single
 categories: 
   - etc.
-last_modified_at: 2020-09-06T08:06:00-05:00
+last_modified_at: 2020-09-06T22:08:00
 classes: wide
 tags:
   - etc.
 ---
 
-읽을 책들 목록
+무료 웹북 목록
 - [Network Science by Albert-László Barabási](http://networksciencebook.com/)
   - 물리학과 선배가 추천해주신 책. 그래프 데이터 처리할 때 도움이 될 듯 하여 받아왔다
 - [The Analysis of Data by Guy Lebanon](http://theanalysisofdata.com/probability/)
