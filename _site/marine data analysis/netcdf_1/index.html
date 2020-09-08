@@ -182,7 +182,7 @@
     
     
       <div class="author__bio" itemprop="description">
-        <p>좀 늦게 공부가 재밌어진 개발자</p>
+        <p>우린 부자가 될꺼야!</p>
 
       </div>
     
@@ -339,7 +339,7 @@
 
 <p><br /></p>
 
-<h1 id="netcdf4-설치">NetCDF4 설치</h1>
+<h2 id="netcdf4-설치">NetCDF4 설치</h2>
 <p>NetCDF4 파일을 읽기 위해서는 NetCDF4를 읽을 수 있는 라이브러리가 필요하다.</p>
 
 <p>마찬가지로 설치하도록 하자.</p>
@@ -348,7 +348,7 @@
 
 <p><br /></p>
 
-<h1 id="netcdf4-파일-읽기">NetCDF4 파일 읽기</h1>
+<h2 id="netcdf4-파일-읽기">NetCDF4 파일 읽기</h2>
 
 <p>NetCDF4 모듈의 설명서는 다음의 링크에 있다.</p>
 <ul>
@@ -443,7 +443,7 @@ filling on, default _FillValue of 9.969209968386869e+36 used
 
 <p><br /></p>
 
-<h1 id="수온-가시화">수온 가시화</h1>
+<h2 id="수온-가시화">수온 가시화</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
@@ -459,7 +459,7 @@ filling on, default _FillValue of 9.969209968386869e+36 used
 
 <p><br /></p>
 
-<h1 id="유속-유향-가시화">유속, 유향 가시화</h1>
+<h2 id="유속-유향-가시화">유속, 유향 가시화</h2>
 
 <p>여기에 UV를 추가해주자</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ax</span><span class="p">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">water_u</span><span class="p">,</span> <span class="n">water_v</span><span class="p">,</span>\
@@ -588,7 +588,47 @@ filling on, default _FillValue of 9.969209968386869e+36 used
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/marine%20data%20analysis/pandas/" rel="permalink">Pandas를 이용한 데이터 분석(1)
+        <a href="/marine%20data%20analysis/pandas_2/" rel="permalink">Pandas를 이용한 데이터 분석(2)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">이전 포스트에서는 간단한 샘플 DataFrame을 만들고 그 메타데이터를 확인해 보았다. 이번 포스트에서는 pandas.Series라는 형식에 대해서 알아보고 DataFrame의 indexing 방법에 대해 알아보고자 한다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/marine%20data%20analysis/pandas_1/" rel="permalink">Pandas를 이용한 데이터 분석(1)
 </a>
       
     </h2>
@@ -613,8 +653,9 @@ filling on, default _FillValue of 9.969209968386869e+36 used
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">Pandas라는 라이브러리를 사용해 조위 관측데이터를 분석해보고자 한다.
-</p>
+    <p class="archive__item-excerpt" itemprop="description">Pandas란 무엇인가?
+
+  pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming...</p>
   </article>
 </div>
 
@@ -670,7 +711,7 @@ filling on, default _FillValue of 9.969209968386869e+36 used
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/marine%20data%20analysis/netcdf_2/" rel="permalink">NetCDF4 데이터 가시화(2)
+        <a href="/marine%20data%20analysis/boxplot/" rel="permalink">Boxplot에 대해 알아보자
 </a>
       
     </h2>
@@ -688,54 +729,15 @@ filling on, default _FillValue of 9.969209968386869e+36 used
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          2 minute read
+          3 minute read
         
       </span>
     
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">1편에 이어서 NetCDF4 데이터를 읽어서 다음과 같이 가시화해보겠다.
+    <p class="archive__item-excerpt" itemprop="description">Boxplot이란 다음과 같은 그래프를 말한다.
 </p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/etctemp/" rel="permalink">sample
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          less than 1 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">역시 마찬가지로, 단순히 고통이라는 이유 때문에 고통 그 자체를 사랑하거나 추구하거나 소유하려는 자는 없다. 다만 노역과 고통이 아주 큰 즐거움을 선사하는 상황이 때로는 발생하기 때문에 고통을 찾는 사람이 있는 것이다. 간단한 예를 들자면, 모종의 이익을 얻을 수도 없는데 힘든 육...</p>
   </article>
 </div>
 

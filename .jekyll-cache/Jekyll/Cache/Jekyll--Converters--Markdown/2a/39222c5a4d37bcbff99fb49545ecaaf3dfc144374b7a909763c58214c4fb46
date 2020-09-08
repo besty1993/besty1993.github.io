@@ -1,0 +1,556 @@
+I"_<p><strong>Boxplot</strong>이란 다음과 같은 그래프를 말한다.</p>
+
+<p><img src="/assets/images/boxplot.png" alt="Boxplot_sample" /></p>
+
+<p>이번 포스트에서는 이 <strong>Boxplot</strong>에 대해서 알아보고 가시화 모듈인 <code class="language-plaintext highlighter-rouge">Seaborn</code>을 이용해서 그려보도록 하겠다.</p>
+
+<h2 id="boxplot이란">Boxplot이란?</h2>
+
+<p>위의 Boxplot 샘플을 보면 무슨 선도 있고 점도 있고 박스도 있어서 복잡해보이는데, 그만큼 많은 정보를 담고 있어 많은 곳에서 사용되는 그래프이다. 어떠한 정보를 담고 있는지 다음의 그림에서 보자.</p>
+
+<p><img src="/assets/images/boxplot_exp.png" alt="Boxplot_Explanation" /></p>
+
+<p>Pandas란 무엇인가?</p>
+<blockquote>
+  <p><strong>pandas</strong> is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.</p>
+</blockquote>
+
+<p><a href="https://pandas.pydata.org/">Pandas 홈페이지</a>에 나와있는 설명문이다. 빠르고 유연하고 기능이 많으며, 사용하기 쉬운 파이썬 기반의 오픈소스 데이터 분석 및 조작 도구라고 한다.
+좀 더 설명하면 파이썬에서 엑셀과 같이 데이터를 표형식으로 읽고, 바꾸고, 분석하는 도구라고 할 수 있겠다. 엑셀만큼 쉽지는 않겠지만 한번 익숙해진다면 많은 양의 데이터를 엑셀보다 훨씬 빠르게 처리할 수 있을 것이다.
+<!-- Pandas라는 라이브러리를 사용해 조위 관측데이터를 분석해보고자 한다. --></p>
+
+<p><br /></p>
+
+<h2 id="pandas-설치">Pandas 설치</h2>
+
+<p>Anaconda를 설치했다면 base에 이미 설치되어 있겠지만 설치가 안 된 사람들은 다음과 같은 명령어로 설치하도록 하자.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">conda install pandas #</span><span class="w"> </span>Conda를 이용해 설치하는 방법
+</code></pre></div></div>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">pip install pandas #</span><span class="w"> </span>Pypl을 이용해 설치하는 방법
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="샘플-데이터프레임-생성">샘플 데이터프레임 생성</h2>
+
+<p>Pandas에서는 표 형식의 데이터베이스를 <code class="language-plaintext highlighter-rouge">DataFrame</code>이라고 부른다.<br />
+간단한 DataFrame을 만들어보자</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dic</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'이름'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'김A'</span><span class="p">,</span> <span class="s">'최B'</span><span class="p">,</span> <span class="s">'이C'</span><span class="p">],</span>
+        <span class="s">'성별'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'남'</span><span class="p">,</span> <span class="s">'여'</span><span class="p">,</span> <span class="s">'남'</span><span class="p">],</span>
+        <span class="s">'나이'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">44</span><span class="p">],</span>
+        <span class="s">'키'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">167.1</span><span class="p">,</span> <span class="mf">165.5</span><span class="p">,</span> <span class="mf">180.5</span><span class="p">],</span>
+        <span class="s">'출신'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'제주'</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dic</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: left">이름</th>
+      <th style="text-align: left">성별</th>
+      <th style="text-align: right">나이</th>
+      <th style="text-align: right">키</th>
+      <th style="text-align: left">출신</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">0</td>
+      <td style="text-align: left">김A</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">25</td>
+      <td style="text-align: right">167.1</td>
+      <td style="text-align: left">제주</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">1</td>
+      <td style="text-align: left">최B</td>
+      <td style="text-align: left">여</td>
+      <td style="text-align: right">32</td>
+      <td style="text-align: right">165.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2</td>
+      <td style="text-align: left">이C</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">44</td>
+      <td style="text-align: right">180.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>간단한 DataFrame을 만들어보았다.
+데이터로 사용된 것은 <code class="language-plaintext highlighter-rouge">dic</code>이라고 명명한 <code class="language-plaintext highlighter-rouge">Dictionary</code>이며, key로는 <strong>이름, 성별, 나이, 키, 출신</strong>을 가지고 있고 각 key의 value로는 사람의 정보가 있다.
+이러한 데이터로 DataFrame을 만들기 위해서는 간단하게 <code class="language-plaintext highlighter-rouge">pd.DataFrame(dic)</code>이라 적으면 된다.</p>
+
+<p>여기에서 <code class="language-plaintext highlighter-rouge">['김A', '남', 25, 167.1, '제주']</code>와 같이 각 데이터는 행으로 나뉘어져 있으며 <strong>row</strong>에 해당한다.
+<code class="language-plaintext highlighter-rouge">['김A', '최B', '이C']</code>와 같이 각 열의 정보는 <strong>column</strong>이라고 한다.</p>
+
+<p>또한, 위에 생성된 표를 보면 <strong>0, 1, 2</strong>와 같은 번호가 새로 만들어졌음을 알 수 있다.
+이러한 숫자와 <strong>이름, 성별, 나이, 키, 출신</strong>과 같은 열 정보는 <strong>index</strong>라고 하며, 데이터를 특정지을 때(indexing) 사용된다.</p>
+
+<p>위의 예시에서 출신 column에 <strong>np.nan</strong>값이 있는데, 이는 결측값을 표현한 것이다.
+‘nan’은 ‘Not a Number’이라는 의미로, 출신지가 숫자 데이터는 아니지만 데이터가 없다는 의미로 사용된다.</p>
+
+<p><br /></p>
+
+<h2 id="데이터-파악">데이터 파악</h2>
+
+<p>위의 예시는 작은 데이터셋이라서 한 눈에 파악할 수 있지만 실제 데이터는 매우 거대할 수 있으므로 파악하는 데에 어려움이 따른다. 이를 위해 Pandas는 여러가지 함수를 제공한다.</p>
+
+<h3 id="dataframehead">DataFrame.head()</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">())</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: left">이름</th>
+      <th style="text-align: left">성별</th>
+      <th style="text-align: right">나이</th>
+      <th style="text-align: right">키</th>
+      <th style="text-align: left">출신</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">0</td>
+      <td style="text-align: left">김A</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">25</td>
+      <td style="text-align: right">167.1</td>
+      <td style="text-align: left">제주</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">1</td>
+      <td style="text-align: left">최B</td>
+      <td style="text-align: left">여</td>
+      <td style="text-align: right">32</td>
+      <td style="text-align: right">165.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2</td>
+      <td style="text-align: left">이C</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">44</td>
+      <td style="text-align: right">180.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; print(df.head(2))
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: left">이름</th>
+      <th style="text-align: left">성별</th>
+      <th style="text-align: right">나이</th>
+      <th style="text-align: right">키</th>
+      <th style="text-align: left">출신</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">0</td>
+      <td style="text-align: left">김A</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">25</td>
+      <td style="text-align: right">167.1</td>
+      <td style="text-align: left">제주</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">1</td>
+      <td style="text-align: left">최B</td>
+      <td style="text-align: left">여</td>
+      <td style="text-align: right">32</td>
+      <td style="text-align: right">165.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<p><code class="language-plaintext highlighter-rouge">DataFrame.head()</code>는 앞의 몇 줄만을 출력하는 함수이다. 기본값은 5줄이며, 괄호 안에 숫자를 넣어서 몇 줄만 출력할 것인지 설정 가능하다.</p>
+
+<p><br /></p>
+
+<h3 id="dataframetail">DataFrame.tail()</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">tail</span><span class="p">())</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: left">이름</th>
+      <th style="text-align: left">성별</th>
+      <th style="text-align: right">나이</th>
+      <th style="text-align: right">키</th>
+      <th style="text-align: left">출신</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">0</td>
+      <td style="text-align: left">김A</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">25</td>
+      <td style="text-align: right">167.1</td>
+      <td style="text-align: left">제주</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">1</td>
+      <td style="text-align: left">최B</td>
+      <td style="text-align: left">여</td>
+      <td style="text-align: right">32</td>
+      <td style="text-align: right">165.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2</td>
+      <td style="text-align: left">이C</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">44</td>
+      <td style="text-align: right">180.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; print(df.tail(2))
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"> </th>
+      <th style="text-align: left">이름</th>
+      <th style="text-align: left">성별</th>
+      <th style="text-align: right">나이</th>
+      <th style="text-align: right">키</th>
+      <th style="text-align: left">출신</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">1</td>
+      <td style="text-align: left">최B</td>
+      <td style="text-align: left">여</td>
+      <td style="text-align: right">32</td>
+      <td style="text-align: right">165.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2</td>
+      <td style="text-align: left">이C</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">44</td>
+      <td style="text-align: right">180.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<p><code class="language-plaintext highlighter-rouge">DataFrame.tail()</code>는  <code class="language-plaintext highlighter-rouge">head</code>의 반대로, 뒤에서 몇 줄만을 출력하는 함수이다. 마찬가지로 기본값은 5줄이며, 괄호 안에 숫자를 넣어서 몇 줄만 출력할 것인지 설정 가능하다.</p>
+
+<p><br /></p>
+
+<h3 id="dataframeshape">DataFrame.shape</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">DataFrame.shape</code>는  데이터의 row 수와 column 수를 출력한다. 위의 예시에서는 row가 3개, column이 5개이므로 (3,5)라고 출력하고 있다.</p>
+
+<p><br /></p>
+
+<h3 id="dataframeinfo">DataFrame.info()</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">info</span><span class="p">())</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">pandas</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">frame</span><span class="p">.</span><span class="n">DataFrame</span><span class="s">'&gt;
+RangeIndex: 3 entries, 0 to 2
+Data columns (total 5 columns):
+ #   Column  Non-Null Count  Dtype  
+---  ------  --------------  -----  
+ 0   이름      3 non-null      object 
+ 1   성별      3 non-null      object 
+ 2   나이      3 non-null      int64  
+ 3   키       3 non-null      float64
+ 4   출신      1 non-null      object 
+dtypes: float64(1), int64(1), object(3)
+memory usage: 248.0+ bytes
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">DataFrame.info()</code>는  데이터의 형식 정보와 같은 것을 출력한다.
+위의 출력 결과를 보면 각 column 별 null값이 아닌 값의 갯수, 데이터 형식 등을 알 수 있다.</p>
+
+<p><br /></p>
+
+<h3 id="dataframedescribe">DataFrame.describe()</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span><span class="p">.</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: right">나이</th>
+      <th style="text-align: right">키</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">count</td>
+      <td style="text-align: right">3</td>
+      <td style="text-align: right">3</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">mean</td>
+      <td style="text-align: right">33.6667</td>
+      <td style="text-align: right">171.033</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">std</td>
+      <td style="text-align: right">9.60902</td>
+      <td style="text-align: right">8.23731</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">min</td>
+      <td style="text-align: right">25</td>
+      <td style="text-align: right">165.5</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">25%</td>
+      <td style="text-align: right">28.5</td>
+      <td style="text-align: right">166.3</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">50%</td>
+      <td style="text-align: right">32</td>
+      <td style="text-align: right">167.1</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">75%</td>
+      <td style="text-align: right">38</td>
+      <td style="text-align: right">173.8</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">max</td>
+      <td style="text-align: right">44</td>
+      <td style="text-align: right">180.5</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">DataFrame.describe</code>는  데이터의 평균, 최소, 최대, 하위 25%, 하위 50%, 하위 75%에 위치한 값 등을 출력한다.<br />
+숫자 데이터가 아닌 경우에는 <code class="language-plaintext highlighter-rouge">include='all'</code>을 추가함으로써 알 수 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span><span class="p">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s">'all'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: left">이름</th>
+      <th style="text-align: left">성별</th>
+      <th style="text-align: right">나이</th>
+      <th style="text-align: right">키</th>
+      <th style="text-align: left">출신</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">count</td>
+      <td style="text-align: left">3</td>
+      <td style="text-align: left">3</td>
+      <td style="text-align: right">3</td>
+      <td style="text-align: right">3</td>
+      <td style="text-align: left">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">unique</td>
+      <td style="text-align: left">3</td>
+      <td style="text-align: left">2</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: left">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">top</td>
+      <td style="text-align: left">이C</td>
+      <td style="text-align: left">남</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: left">제주</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">freq</td>
+      <td style="text-align: left">1</td>
+      <td style="text-align: left">2</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: left">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">mean</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: right">33.6667</td>
+      <td style="text-align: right">171.033</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">std</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: right">9.60902</td>
+      <td style="text-align: right">8.23731</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">min</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: right">25</td>
+      <td style="text-align: right">165.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">25%</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: right">28.5</td>
+      <td style="text-align: right">166.3</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">50%</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: right">32</td>
+      <td style="text-align: right">167.1</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">75%</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: right">38</td>
+      <td style="text-align: right">173.8</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">max</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: left">nan</td>
+      <td style="text-align: right">44</td>
+      <td style="text-align: right">180.5</td>
+      <td style="text-align: left">nan</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- 
+# Pandas Series
+
+DataFrame에서 각각의 열 또는 행을 Series라고 한다.
+DataFrame에서 Series를 뽑아내는 방법은 3가지가 있다.
+
+일단 0번 데이터의 출신지를 뽑아보자.\
+Indexing에는 3가지 방법이 있다.
+
+## 1. Column based indexing
+~~~python
+>>> print(df['출신'])
+0    제주
+1    서울
+2    경기
+Name: 출신, dtype: object
+
+>>> print(df['출신'][0])
+제주
+~~~
+Column based indexing은 관심이 있는 column을 먼저 출력한 후 관심있는 row를 출력한다.\
+`df['출신']`은 데이터프레임의 **출신** column만을 `Series`형태로 먼저 뽑으며,\
+`df['출신'][0]`은 `df['출신']`라는 `Series` 중에서도 0번 데이터를 출력한다.
+
+참고로, `df['출신']`와 같이 한 줄로만 되어있는 자료 형식을 `Series`라고 한다.
+
+## 2. Location based indexing
+~~~python
+>>> print(df.loc[0])
+이름    김A
+성별     남
+출신    제주
+Name: 0, dtype: object
+
+>>> print(df.loc[0, '출신'])
+제주
+~~~
+Location based indexing은 (DataFrame).loc으로 사용 가능하다.\
+Column based indexing과는 다르게 row의 index부터 찾고, column을 찾는 방식이다.\
+찾고자 하는 데이터는 0번 row에 **출신**이라는 column이므로 `df.loc[0,'출신']`을 출력하면 된다.
+
+## 3. Integer-location based indexing
+~~~python
+>>> print(df.iloc[0])
+이름    김A
+성별     남
+출신    제주
+Name: 0, dtype: object
+
+>>> print(df.iloc[0, 2])
+제주
+~~~
+Integer-location based indexing은 (DataFrame).iloc으로 사용 가능하며, Location based indexing과 비슷하다.\
+차이점이라면 Location based indexing은 index를 행과 열의 이름을 사용하며, Integer-location based indexing은 index를 몇번째 위치에 있는 행과 열인지를 사용한다.\
+위의 예시를 보면 0번 데이터는 0번째 row에 위치하며, **출신**이라는 column이 2번째 위치하므로, `df.iloc[0, 2]`라고 적은 것을 알 수 있다.
+
+위의 예시들은 전부 한 가지 column에 한 가지 row만을 출력했지만, 다수의 column과 다수의 row를 사용하는 것도 가능하다. 
+
+그에 대한 예시로 0번과 2번 데이터의 이름과 성별만을 출력해보겠다.
+~~~
+>>> print(df.loc[[0,2]])
+   이름 성별  출신
+0  김A  남  제주
+2  이C  남  경기
+>>> print(df.loc[[0,2],['이름','성별']])
+   이름 성별
+0  김A  남
+2  이C  남
+~~~
+
+~~~
+print(df.iloc[[0,2]])
+   이름 성별  출신
+0  김A  남  제주
+2  이C  남  경기
+~~~ -->
+:ET
