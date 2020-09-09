@@ -1,8 +1,11 @@
-I"�<p><strong>Boxplot</strong>이란 다음과 같은 그래프를 말한다.</p>
+I"�<p><strong>Boxplot</strong>이란 다음과 같은 그래프를 말한다.</p>
 
-<p><img src="/assets/images/boxplot.png" alt="Boxplot_sample" /></p>
+<p align="center">
+  <img width="460" height="300" src="/assets/images/boxplot.png" />
+</p>
+<p><img src="/assets/images/boxplot.png" alt="Boxplot_sample" height="36px" width="36px" /></p>
 
-<p>이번 포스트에서는 이 <strong>Boxplot</strong>에 대해서 알아보고 가시화 모듈인 <code class="language-plaintext highlighter-rouge">Seaborn</code>을 이용해서 그려보도록 하겠다.</p>
+<p>이번 포스트에서는 이 <strong>Boxplot</strong>에 대해서 알아보겠다.</p>
 
 <h2 id="boxplot이란">Boxplot이란?</h2>
 
@@ -38,6 +41,8 @@
 
 <p><img src="/assets/images/quartiles.png" alt="Quartiles" /></p>
 
+<p>(그림 출처 : <a href="https://en.wikipedia.org/wiki/Quantile">Wikipedia</a>)</p>
+
 <p>위의 그림처럼 일반적인 Gaussian Distribution 등을 생각해보면 하위 25%에서 상위 25%까지의 범위는 매우 좁지만 전체 데이터의 반을 차지하고 있어 매우 의미있는 수라고 할 수 있다. 또한 중앙값과 마찬가지로 이상점에 대해 강건하다는 장점도 있다.</p>
 
 <p>데이터의 전체 갯수를 4등분 했을 때 나오는 세 수를 각각 하위 25%에 해당하는 <strong>제 1 사분위수(1st Quartile, Q1)</strong>, 하위/상위 50%에 해당하는 <strong>제 2 사분위수(2nd Quartile, Q2)</strong> 혹은 <strong>중앙값</strong>, 그리고 상위 25%에 해당하는 <strong>제 3 사분위수(3rd Quartile, Q3)</strong>라고 부른다.</p>
@@ -48,5 +53,24 @@
 
 <p>위의 Boxplot의 예시를 보면 한 가지 이상한 점을 발견할 수 있다. 분명 최댓값이라고 적혀있는데 그 위에 점으로 표시된 데이터가 더 있지 않은가? 이 점으로 표시된 데이터가 바로 위에서 언급한 <strong>이상점</strong>이다. 같은 분포 내의 다른 데이터와는 확연히 다른 양상을 보이는 데이터이기 때문에 이러한 이상점은 따로 분리를 해주는 것이 일반적이며, 이상점을 분리하고 난 후에 <strong>최댓값</strong>과 <strong>최솟값</strong>을 구한다. 이 최댓값과 최솟값은 박스에서 이어져 나온 선분으로 표시되며, 수염(Whisker)라고도 불린다.</p>
 
-<p>그러면 이 이상점을 어떻게 분리를 할 수 있을까? 위에서 언급한 <strong>사분범위(IQR)</strong>가 사용된다. 이 제 1사분위수보다 IQR*1.5 이상으로 작은 값과, 제 3 사분위수보다 IQR*1.5 이상으로 큰 값이</p>
+<p>그러면 이 이상점을 어떻게 분리를 할 수 있을까? 위에서 언급한 <strong>사분범위(IQR)</strong>가 사용된다. 이 제 1사분위수보다 IQR*1.5 이상으로 작은 값과, 제 3 사분위수보다 IQR*1.5 이상으로 큰 값이 이상점으로 취급된다. 그리고 저 범위를 <strong>Inner Fence</strong>라고 한다. 이 Inner Fence 내에서의 최댓값과 최솟값이 데이터 분포 전체에서의 최댓값과 최솟값으로 표현되는 것이다.</p>
+
+<p><img src="/assets/images/IQR.png" alt="IQR" /></p>
+
+<p>(그림 출처 : <a href="https://en.wikipedia.org/wiki/Interquartile_range">Wikipedia</a>)</p>
+
+<h2 id="seaborn을-이용한-boxplot">Seaborn을 이용한 Boxplot</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Seaborn</code>을 통해서 Boxplot을 매우 쉽게 그릴 수 있다. 데이터를 우선 DataFrame으로 만들고 나면 x축, y축, hue를 정하는 것만으로도 간단하게 Boxplot을 그려준다.<br />
+이에 대한 예시로는 <a href="https://seaborn.pydata.org/generated/seaborn.boxplot.html">Seaborn Documentation</a>에 잘 설명되어 있으니 참고하자.</p>
+
+<h2 id="violin-plot">Violin Plot</h2>
+
+<p><img src="/assets/images/box_vs_violin.png" alt="BoxViolin" /></p>
+
+<p>자매품(?)으로 <strong>Violin Plot</strong>이라는 것이 있다.<br />
+BoxPlot이 담고 있는 모든 정보를 제공하며, box 대신 KDE(Kernel Density Estimation, 커널밀도추정)를 그려주어 데이터의 분포까지 알 수 있는 발전된 형태의 그래프이다. Boxplot은 데이터의 최대, 최소, 4분위수만 같다면 분포에 상관없이 같은 그래프를 보이지만 violin plot은 분포 또한 확인할 수 있다는 장점이 있다.</p>
+
+<p><img src="/assets/images/BoxViolinSmaller.gif" alt="BoxViolin" />
+(그림 출처 : <a href="https://www.autodeskresearch.com/publications/samestats">autodeskresearch</a>)</p>
 :ET

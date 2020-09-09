@@ -24,8 +24,8 @@ var store = [{
         "teaser": null
       },{
         "title": "Boxplot에 대해 알아보자",
-        "excerpt":"Boxplot이란 다음과 같은 그래프를 말한다. 이번 포스트에서는 이 Boxplot에 대해서 알아보고 가시화 모듈인 Seaborn을 이용해서 그려보도록 하겠다. Boxplot이란? 위의 Boxplot 샘플을 보면 무슨 선도 있고 점도 있고 박스도 있어서 복잡해보이는데, 그만큼 많은 정보를 담고 있어 데이터의 분포를 표현하는 데에 적합한 그래프이다. 어떠한 정보를 담고 있는지 다음의 그림에서 보자. 하나하나 쉬운...","categories": ["Marine Data Analysis"],
-        "tags": ["Python","Data Science","Seaborn","Matplotlib"],
+        "excerpt":"Boxplot이란 다음과 같은 그래프를 말한다. 이번 포스트에서는 이 Boxplot에 대해서 알아보겠다. Boxplot이란? 위의 Boxplot 샘플을 보면 무슨 선도 있고 점도 있고 박스도 있어서 복잡해보이는데, 그만큼 많은 정보를 담고 있어 데이터의 분포를 표현하는 데에 적합한 그래프이다. 어떠한 정보를 담고 있는지 다음의 그림에서 보자. 하나하나 쉬운 용어부터 설명하겠다. 중앙값 중앙값(Median)말 그대로 데이터를...","categories": ["Marine Data Analysis"],
+        "tags": ["Python","Data Science","Seaborn","Matplotlib","Data Visualization"],
         "url": "http://localhost:4000/marine%20data%20analysis/boxplot/",
         "teaser": null
       },{
