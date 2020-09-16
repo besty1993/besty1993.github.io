@@ -1,8 +1,9 @@
-I"�<p><a href="/marine%20data%20analysis/pandas_1/">이전 포스트</a>에서는 간단한 샘플 DataFrame을 만들고 그 메타데이터를 확인해 보았다. 이번 포스트에서는 pandas.Series라는 형식에 대해서 알아보고 DataFrame의 indexing 방법에 대해 알아보고자 한다.</p>
+I"� <p><a href="/marine%20data%20analysis/pandas_1/">이전 포스트</a>에서는 간단한 샘플 DataFrame을 만들고 그 메타데이터를 확인해 보았다. 이번 포스트에서는 pandas.Series라는 형식에 대해서 알아보고 DataFrame의 indexing 방법에 대해 알아보고자 한다.</p>
 
 <p>그 전에 우선 지난 번에 만들었던 샘플 Dataset을 다시 한번 만들어놓자.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">dic</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s">'이름'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'김A'</span><span class="p">,</span> <span class="s">'최B'</span><span class="p">,</span> <span class="s">'이C'</span><span class="p">],</span>
         <span class="s">'성별'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'남'</span><span class="p">,</span> <span class="s">'여'</span><span class="p">,</span> <span class="s">'남'</span><span class="p">],</span>
@@ -16,18 +17,9 @@
 <h2 id="pandas-series">Pandas Series</h2>
 
 <p>표 형식의 데이터가 <code class="language-plaintext highlighter-rouge">pandas.DataFrame</code>이라고 한다면 그 각각의 열 또는 행은 <code class="language-plaintext highlighter-rouge">pandas.Series</code>라고 할 수 있다.<br />
-간단하게 Series 하나를 뽑아보자.</p>
+간단하게 0번째 index의 데이터를 Series로 뽑아보자.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s">'이름'</span><span class="p">]</span>
-<span class="mi">0</span>    <span class="n">김A</span>
-<span class="mi">1</span>    <span class="n">최B</span>
-<span class="mi">2</span>    <span class="n">이C</span>
-<span class="n">Name</span><span class="p">:</span> <span class="n">이름</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">Dictionary</code>처럼 <strong>이름</strong>이라는 key를 입력해주니 이름 데이터가 전부 출력되었다. 이처럼 Series는 1차원 데이터를 나타내는 형식이다. 위에서는 ‘이름’이라는 column의 데이터를 뽑아봤고, row의 데이터를 뽑기 위해서는 Series.loc을 사용할 수 있다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">이름</span>       <span class="n">김A</span>
 <span class="n">성별</span>        <span class="n">남</span>
 <span class="n">나이</span>       <span class="mi">25</span>
@@ -35,6 +27,26 @@
 <span class="n">출신</span>       <span class="n">제주</span>
 <span class="n">Name</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
 </code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">DataFrame.loc</code>을 사용하여 0번쨰 index의 정보를 전부 출력하였다. 이처럼 ‘Series’는 1차원 데이터를 나타내는 형식이다. ‘Series’의 구성요소를 살펴보면, <code class="language-plaintext highlighter-rouge">김A, 남, 25, 167.1, 제주</code>와 같은 <strong>데이터</strong>가 있고, <code class="language-plaintext highlighter-rouge">이름, 성별, 나이, 키, 출신</code>과 같은 <strong>index</strong>가 있다. 그리고 마지막으로 <code class="language-plaintext highlighter-rouge">0</code>이라는 <strong>Name</strong>이 있다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">DataFrame.loc</code>은 Pandas를 이용한다면 반드시 필요한 도구인데, 나중에 다시 언급하겠다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'이름'</span><span class="p">])</span>
+<span class="mi">0</span>    <span class="n">김A</span>
+<span class="mi">1</span>    <span class="n">최B</span>
+<span class="mi">2</span>    <span class="n">이C</span>
+<span class="n">Name</span><span class="p">:</span> <span class="n">이름</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'이름'</span><span class="p">])</span>
+<span class="mi">0</span>    <span class="n">김A</span>
+<span class="mi">1</span>    <span class="n">최B</span>
+<span class="mi">2</span>    <span class="n">이C</span>
+<span class="n">Name</span><span class="p">:</span> <span class="n">이름</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
+</code></pre></div></div>
+
+<p>column 데이터는 두가지 방법으로 출력할 수 있다. DataFrame.loc[:,column]
+이처럼 김A에 대한 정보를 전부 출력할 수 있다.</p>
 
 <!-- 
 ## 1. Column based indexing

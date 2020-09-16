@@ -1,110 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-09-09T12:54:07+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Random Dev Blog</title><subtitle>Random Blog Posting Random Things</subtitle><author><name>Chase Yang</name><email>yang8571@gmail.com</email></author><entry><title type="html">Pandas를 이용한 데이터 분석(2)</title><link href="http://localhost:4000/marine%20data%20analysis/pandas_2/" rel="alternate" type="text/html" title="Pandas를 이용한 데이터 분석(2)" /><published>2020-09-07T00:00:00+09:00</published><updated>2020-09-07T18:06:00+09:00</updated><id>http://localhost:4000/marine%20data%20analysis/pandas_2</id><content type="html" xml:base="http://localhost:4000/marine%20data%20analysis/pandas_2/">&lt;p&gt;&lt;a href=&quot;/marine%20data%20analysis/pandas_1/&quot;&gt;이전 포스트&lt;/a&gt;에서는 간단한 샘플 DataFrame을 만들고 그 메타데이터를 확인해 보았다. 이번 포스트에서는 pandas.Series라는 형식에 대해서 알아보고 DataFrame의 indexing 방법에 대해 알아보고자 한다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-09-16T09:41:27+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Random Dev Blog</title><subtitle>Random Blog Posting Random Things</subtitle><author><name>Chase Yang</name><email>yang8571@gmail.com</email></author><entry><title type="html">Pandas_2</title><link href="http://localhost:4000/pandas_2/" rel="alternate" type="text/html" title="Pandas_2" /><published>2020-09-07T00:00:00+09:00</published><updated>2020-09-07T00:00:00+09:00</updated><id>http://localhost:4000/pandas_2</id><content type="html" xml:base="http://localhost:4000/pandas_2/">&lt;!-- ---
+title:  &quot;Pandas를 이용한 데이터 분석(2)&quot;
+layout: single
+categories: 
+  - Marine Data Analysis
+last_modified_at: 2020-09-07T09:06:00
+classes: wide
+tags:
+  - Python
+  - Marine Data Analysis
+  - Data Science
+  - Pandas
+---
 
-&lt;p&gt;그 전에 우선 지난 번에 만들었던 샘플 Dataset을 다시 한번 만들어놓자.&lt;/p&gt;
+[이전 포스트](/marine%20data%20analysis/pandas_1/)에서는 간단한 샘플 DataFrame을 만들고 그 메타데이터를 확인해 보았다. 이번 포스트에서는 pandas.Series라는 형식에 대해서 알아보고 DataFrame의 indexing 방법에 대해 알아보고자 한다.
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dic&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s&quot;&gt;'이름'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'김A'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'최B'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'이C'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;s&quot;&gt;'성별'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'남'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'여'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'남'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;s&quot;&gt;'나이'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;44&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;s&quot;&gt;'키'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;167.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;165.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;180.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;s&quot;&gt;'출신'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'제주'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DataFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+그 전에 우선 지난 번에 만들었던 샘플 Dataset을 다시 한번 만들어놓자.
 
-&lt;h2 id=&quot;pandas-series&quot;&gt;Pandas Series&lt;/h2&gt;
-
-&lt;p&gt;표 형식의 데이터가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pandas.DataFrame&lt;/code&gt;이라고 한다면 그 각각의 열 또는 행은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pandas.Series&lt;/code&gt;라고 할 수 있다.&lt;br /&gt;
-간단하게 Series 하나를 뽑아보자.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'이름'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;김A&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;최B&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;이C&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;이름&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dictionary&lt;/code&gt;처럼 &lt;strong&gt;이름&lt;/strong&gt;이라는 key를 입력해주니 이름 데이터가 전부 출력되었다. 이처럼 Series는 1차원 데이터를 나타내는 형식이다. 위에서는 ‘이름’이라는 column의 데이터를 뽑아봤고, row의 데이터를 뽑기 위해서는 Series.loc을 사용할 수 있다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;이름&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;김A&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;성별&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;남&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;나이&lt;/span&gt;       &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;키&lt;/span&gt;     &lt;span class=&quot;mf&quot;&gt;167.1&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;출신&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;제주&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;!-- 
-## 1. Column based indexing
 ~~~python
-&gt;&gt;&gt; print(df['출신'])
-0    제주
-1    서울
-2    경기
-Name: 출신, dtype: object
-
-&gt;&gt;&gt; print(df['출신'][0])
-제주
-~~~
-Column based indexing은 관심이 있는 column을 먼저 출력한 후 관심있는 row를 출력한다.\
-`df['출신']`은 데이터프레임의 **출신** column만을 `Series`형태로 먼저 뽑으며,\
-`df['출신'][0]`은 `df['출신']`라는 `Series` 중에서도 0번 데이터를 출력한다.
-
-참고로, `df['출신']`와 같이 한 줄로만 되어있는 자료 형식을 `Series`라고 한다.
-
-## 2. Location based indexing
-~~~python
-&gt;&gt;&gt; print(df.loc[0])
-이름    김A
-성별     남
-출신    제주
-Name: 0, dtype: object
-
-&gt;&gt;&gt; print(df.loc[0, '출신'])
-제주
-~~~
-Location based indexing은 (DataFrame).loc으로 사용 가능하다.\
-Column based indexing과는 다르게 row의 index부터 찾고, column을 찾는 방식이다.\
-찾고자 하는 데이터는 0번 row에 **출신**이라는 column이므로 `df.loc[0,'출신']`을 출력하면 된다.
-
-## 3. Integer-location based indexing
-~~~python
-&gt;&gt;&gt; print(df.iloc[0])
-이름    김A
-성별     남
-출신    제주
-Name: 0, dtype: object
-
-&gt;&gt;&gt; print(df.iloc[0, 2])
-제주
-~~~
-Integer-location based indexing은 (DataFrame).iloc으로 사용 가능하며, Location based indexing과 비슷하다.\
-차이점이라면 Location based indexing은 index를 행과 열의 이름을 사용하며, Integer-location based indexing은 index를 몇번째 위치에 있는 행과 열인지를 사용한다.\
-위의 예시를 보면 0번 데이터는 0번째 row에 위치하며, **출신**이라는 column이 2번째 위치하므로, `df.iloc[0, 2]`라고 적은 것을 알 수 있다.
-
-위의 예시들은 전부 한 가지 column에 한 가지 row만을 출력했지만, 다수의 column과 다수의 row를 사용하는 것도 가능하다. 
-
-그에 대한 예시로 0번과 2번 데이터의 이름과 성별만을 출력해보겠다.
-~~~
-&gt;&gt;&gt; print(df.loc[[0,2]])
-   이름 성별  출신
-0  김A  남  제주
-2  이C  남  경기
-&gt;&gt;&gt; print(df.loc[[0,2],['이름','성별']])
-   이름 성별
-0  김A  남
-2  이C  남
-~~~
-
-~~~
-print(df.iloc[[0,2]])
-   이름 성별  출신
-0  김A  남  제주
-2  이C  남  경기
-~~~ --&gt;
-&lt;p&gt;–&amp;gt;&lt;/p&gt;</content><author><name>Chase Yang</name><email>yang8571@gmail.com</email></author><category term="Marine Data Analysis" /><category term="Python" /><category term="Marine Data Analysis" /><category term="Data Science" /><category term="Pandas" /><summary type="html">이전 포스트에서는 간단한 샘플 DataFrame을 만들고 그 메타데이터를 확인해 보았다. 이번 포스트에서는 pandas.Series라는 형식에 대해서 알아보고 DataFrame의 indexing 방법에 대해 알아보고자 한다.</summary></entry><entry><title type="html">Pandas를 이용한 데이터 분석(1)</title><link href="http://localhost:4000/marine%20data%20analysis/pandas_1/" rel="alternate" type="text/html" title="Pandas를 이용한 데이터 분석(1)" /><published>2020-09-06T00:00:00+09:00</published><updated>2020-09-06T21:06:00+09:00</updated><id>http://localhost:4000/marine%20data%20analysis/pandas_1</id><content type="html" xml:base="http://localhost:4000/marine%20data%20analysis/pandas_1/">&lt;p&gt;Pandas란 무엇인가?&lt;/p&gt;
+&gt;&gt;&gt; import pandas as pd
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; dic = {
+        '이름' : ['김A', '최B', '이C'],
+        '성별' : ['남', '여', '남'],
+        '나이' : [25, 32, 44],
+        '키' : [167.1, 165.5, 180.5],
+        '출신' : ['제주',np.nan,np.nan],
+    }
+&gt;&gt;&gt; df = pd.DataFrame(dic)
+~~~ --&gt;</content><author><name>Chase Yang</name><email>yang8571@gmail.com</email></author><summary type="html">&amp;lt;!– — title: “Pandas를 이용한 데이터 분석(2)” layout: single categories: Marine Data Analysis last_modified_at: 2020-09-07T09:06:00 classes: wide tags: Python Marine Data Analysis Data Science Pandas</summary></entry><entry><title type="html">Pandas를 이용한 데이터 분석(1)</title><link href="http://localhost:4000/marine%20data%20analysis/pandas_1/" rel="alternate" type="text/html" title="Pandas를 이용한 데이터 분석(1)" /><published>2020-09-06T00:00:00+09:00</published><updated>2020-09-06T21:06:00+09:00</updated><id>http://localhost:4000/marine%20data%20analysis/pandas_1</id><content type="html" xml:base="http://localhost:4000/marine%20data%20analysis/pandas_1/">&lt;p&gt;Pandas란 무엇인가?&lt;/p&gt;
 &lt;blockquote&gt;
   &lt;p&gt;&lt;strong&gt;pandas&lt;/strong&gt; is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -571,82 +494,56 @@ memory usage: 248.0+ bytes
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;!-- 
-# Pandas Series
+&lt;h2 id=&quot;pandas-series&quot;&gt;Pandas Series&lt;/h2&gt;
 
-DataFrame에서 각각의 열 또는 행을 Series라고 한다.
-DataFrame에서 Series를 뽑아내는 방법은 3가지가 있다.
+&lt;p&gt;표 형식의 데이터가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pandas.DataFrame&lt;/code&gt;이라고 한다면 그 각각의 열 또는 행은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pandas.Series&lt;/code&gt;라고 할 수 있다.&lt;br /&gt;
+간단하게 0번째 index의 데이터를 Series로 뽑아보자.&lt;/p&gt;
 
-일단 0번 데이터의 출신지를 뽑아보자.\
-Indexing에는 3가지 방법이 있다.
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;이름&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;김A&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;성별&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;남&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;나이&lt;/span&gt;       &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;키&lt;/span&gt;     &lt;span class=&quot;mf&quot;&gt;167.1&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;출신&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;제주&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-## 1. Column based indexing
-~~~python
-&gt;&gt;&gt; print(df['출신'])
-0    제주
-1    서울
-2    경기
-Name: 출신, dtype: object
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DataFrame.loc&lt;/code&gt;을 사용하여 0번쨰 index의 정보를 전부 출력하였다. 이처럼 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Series&lt;/code&gt;는 1차원 데이터를 나타내는 형식이다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Series&lt;/code&gt;의 구성요소를 살펴보면, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;김A, 남, 25, 167.1, 제주&lt;/code&gt;와 같은 &lt;strong&gt;데이터&lt;/strong&gt;가 있고, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;이름, 성별, 나이, 키, 출신&lt;/code&gt;과 같은 &lt;strong&gt;index&lt;/strong&gt;가 있다. 그리고 마지막으로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;이라는 &lt;strong&gt;Name&lt;/strong&gt;이 있다.&lt;/p&gt;
 
-&gt;&gt;&gt; print(df['출신'][0])
-제주
-~~~
-Column based indexing은 관심이 있는 column을 먼저 출력한 후 관심있는 row를 출력한다.\
-`df['출신']`은 데이터프레임의 **출신** column만을 `Series`형태로 먼저 뽑으며,\
-`df['출신'][0]`은 `df['출신']`라는 `Series` 중에서도 0번 데이터를 출력한다.
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DataFrame.loc&lt;/code&gt;은 Pandas를 이용한다면 반드시 필요한 도구인데, 이후에 다시 언급하겠다.&lt;/p&gt;
+&lt;/blockquote&gt;
 
-참고로, `df['출신']`와 같이 한 줄로만 되어있는 자료 형식을 `Series`라고 한다.
+&lt;p&gt;만약 column 데이터를 출력하고 싶다면 다음과 같이 DataFrame을 Dictionary에 key를 입력하듯 쓸 수 있다.&lt;br /&gt;
+이외에도 loc을 이용한 방법도 추가로 있지만 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DataFrame.loc&lt;/code&gt;과 같이 언급하겠다.&lt;/p&gt;
 
-## 2. Location based indexing
-~~~python
-&gt;&gt;&gt; print(df.loc[0])
-이름    김A
-성별     남
-출신    제주
-Name: 0, dtype: object
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'이름'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;김A&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;최B&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;이C&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;이름&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&gt;&gt;&gt; print(df.loc[0, '출신'])
-제주
-~~~
-Location based indexing은 (DataFrame).loc으로 사용 가능하다.\
-Column based indexing과는 다르게 row의 index부터 찾고, column을 찾는 방식이다.\
-찾고자 하는 데이터는 0번 row에 **출신**이라는 column이므로 `df.loc[0,'출신']`을 출력하면 된다.
+&lt;h3 id=&quot;seriesunique&quot;&gt;Series.unique()&lt;/h3&gt;
 
-## 3. Integer-location based indexing
-~~~python
-&gt;&gt;&gt; print(df.iloc[0])
-이름    김A
-성별     남
-출신    제주
-Name: 0, dtype: object
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'출신'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unique&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'제주'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&gt;&gt;&gt; print(df.iloc[0, 2])
-제주
-~~~
-Integer-location based indexing은 (DataFrame).iloc으로 사용 가능하며, Location based indexing과 비슷하다.\
-차이점이라면 Location based indexing은 index를 행과 열의 이름을 사용하며, Integer-location based indexing은 index를 몇번째 위치에 있는 행과 열인지를 사용한다.\
-위의 예시를 보면 0번 데이터는 0번째 row에 위치하며, **출신**이라는 column이 2번째 위치하므로, `df.iloc[0, 2]`라고 적은 것을 알 수 있다.
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Series.unique()&lt;/code&gt;는 해당 Series의 유니크한 값들(?)을 전부 출력한다.&lt;br /&gt;
+출력되는 값에는 nan도 포함되어있다.&lt;/p&gt;
 
-위의 예시들은 전부 한 가지 column에 한 가지 row만을 출력했지만, 다수의 column과 다수의 row를 사용하는 것도 가능하다. 
+&lt;h3 id=&quot;seriescount_values&quot;&gt;Series.count_values()&lt;/h3&gt;
 
-그에 대한 예시로 0번과 2번 데이터의 이름과 성별만을 출력해보겠다.
-~~~
-&gt;&gt;&gt; print(df.loc[[0,2]])
-   이름 성별  출신
-0  김A  남  제주
-2  이C  남  경기
-&gt;&gt;&gt; print(df.loc[[0,2],['이름','성별']])
-   이름 성별
-0  김A  남
-2  이C  남
-~~~
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'성별'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value_counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;남&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;여&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;성별&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;int64&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-~~~
-print(df.iloc[[0,2]])
-   이름 성별  출신
-0  김A  남  제주
-2  이C  남  경기
-~~~ --&gt;</content><author><name>Chase Yang</name><email>yang8571@gmail.com</email></author><category term="Marine Data Analysis" /><category term="Python" /><category term="Marine Data Analysis" /><category term="Data Science" /><category term="Pandas" /><summary type="html">Pandas란 무엇인가? pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.</summary></entry><entry><title type="html">`load’: marshal data too short (ArgumentError) 문제 해결</title><link href="http://localhost:4000/etcjekyll_debug/" rel="alternate" type="text/html" title="`load’: marshal data too short (ArgumentError) 문제 해결" /><published>2020-09-06T00:00:00+09:00</published><updated>2020-09-07T04:00:00+09:00</updated><id>http://localhost:4000/jekyll_debug</id><content type="html" xml:base="http://localhost:4000/etcjekyll_debug/">&lt;p&gt;열심히 블로그 공사하다가 서버를 껐다 켰더니 이런 에러가 뜬다&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Series.count_values()&lt;/code&gt;는 각 값들이 해당 Series에 몇 개 존재하는지 알려준다.&lt;/p&gt;
+
+&lt;p&gt;이외에도 max(), min(), median(), mode(), std() 등도 존재하여 최대, 최소, 중앙값, 최빈값, 표준편차 등을 구하는 것도 가능하다.&lt;/p&gt;</content><author><name>Chase Yang</name><email>yang8571@gmail.com</email></author><category term="Marine Data Analysis" /><category term="Python" /><category term="Marine Data Analysis" /><category term="Data Science" /><category term="Pandas" /><summary type="html">Pandas란 무엇인가? pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.</summary></entry><entry><title type="html">`load’: marshal data too short (ArgumentError) 문제 해결</title><link href="http://localhost:4000/etcjekyll_debug/" rel="alternate" type="text/html" title="`load’: marshal data too short (ArgumentError) 문제 해결" /><published>2020-09-06T00:00:00+09:00</published><updated>2020-09-07T04:00:00+09:00</updated><id>http://localhost:4000/jekyll_debug</id><content type="html" xml:base="http://localhost:4000/etcjekyll_debug/">&lt;p&gt;열심히 블로그 공사하다가 서버를 껐다 켰더니 이런 에러가 뜬다&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; jekyll serve
                     ------------------------------------------------
       Jekyll 4.1.1   Please append `--trace` to the `serve` command

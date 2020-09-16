@@ -41,9 +41,9 @@ var store = [{
         "url": "http://localhost:4000/marine%20data%20analysis/pandas_1/",
         "teaser": null
       },{
-        "title": "Pandas를 이용한 데이터 분석(2)",
-        "excerpt":"이전 포스트에서는 간단한 샘플 DataFrame을 만들고 그 메타데이터를 확인해 보았다. 이번 포스트에서는 pandas.Series라는 형식에 대해서 알아보고 DataFrame의 indexing 방법에 대해 알아보고자 한다. 그 전에 우선 지난 번에 만들었던 샘플 Dataset을 다시 한번 만들어놓자. &gt;&gt;&gt; import pandas as pd &gt;&gt;&gt; dic = { '이름' : ['김A', '최B', '이C'], '성별' : ['남',...","categories": ["Marine Data Analysis"],
-        "tags": ["Python","Marine Data Analysis","Data Science","Pandas"],
-        "url": "http://localhost:4000/marine%20data%20analysis/pandas_2/",
+        "title": "Pandas_2",
+        "excerpt":" ","categories": [],
+        "tags": [],
+        "url": "http://localhost:4000/pandas_2/",
         "teaser": null
       }]
