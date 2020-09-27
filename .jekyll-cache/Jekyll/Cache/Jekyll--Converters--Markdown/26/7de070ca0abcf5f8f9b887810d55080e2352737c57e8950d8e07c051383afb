@@ -1,0 +1,39 @@
+I"<p>해안선 추출 작업 중에 제일 마지막 단계인 <strong>Edge Detection</strong>에서 자꾸 이런 에러가 뜬다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+&lt;timed exec&gt; in &lt;module&gt;
+
+&lt;ipython-input-16-d58dd581f2d3&gt; in Pipeline(tiff_path)
+     43 #     laplacian[laplacian==0] = np.nan
+     44 
+---&gt; 45     sobel = cv2.Sobel(img, cv2.CV_8U, 1, 1, 3).astype('float')
+     46 #     sobel[sobel==0] = np.nan
+     47 
+
+TypeError: Expected Ptr&lt;cv::UMat&gt; for argument 'src'
+</code></pre></div></div>
+
+<p>위에 있는 건 Sobel Edge Detection이지만 Canny나 Laplacian도 똑같은 에러가 뜬다.<br />
+웃기는 건 <code class="language-plaintext highlighter-rouge">Scikit-Image</code>로 적용한 <em>Prewitt</em>이나 <em>Roberts</em>는 문제없이 잘 된다는 것.</p>
+
+<p>구글링해봤을 때는 뭐 파일 경로가 잘못 되었다던가 했는데 skimage는 경로를 잘 인식하고 OpenCV는 못 한다는 법이 없지 않은가.</p>
+
+<p>어쨌든, 해결법은 <a href="https://docs.opencv.org/2.4/modules/imgproc/doc/feature_detection.html?highlight=canny#canny">OpenCV documentation</a>에서 찾았는데, <code class="language-plaintext highlighter-rouge">image</code>라는 입력 변수를 single-channel 8-bit image로만 받는다는 것이다.<br />
+Edge Detection을 하기 전에 이것 저것 하느라고 출력이 0~1 사이의 값을 가진 float32형태로 나왔는데, 이걸 OpenCV는 인식을 못 하고 Scikit-Image는 인식한다는 것이었다.</p>
+
+<p>따라서 이 문제를 해결하기 위해서는 단순히 데이터 형식을 uint8로 바꿔주면 된다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">img</span><span class="o">*</span><span class="mi">255</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>본인의 경우에는 img 변수가 0~1의 값을 가진 float32형태이므로 255를 곱한 후 uint8로 바꾸었다.</p>
+
+<ul>
+  <li>참고로, <code class="language-plaintext highlighter-rouge">Scikit-Image</code>의 경우 Float형식의 데이터를 지원하는 만큼 Edge Detection 시 np.nan값도 그냥 무시하면서 무난무난하게 넘어가는데, <code class="language-plaintext highlighter-rouge">OpenCV</code>의 경우 될 리가 없다. <code class="language-plaintext highlighter-rouge">Scikit-Image</code>가 갑자기 <code class="language-plaintext highlighter-rouge">OpenCV</code>보다 좋아보인다.</li>
+  <li>잠시 초보를 위한 설명을 하자면, int8과 uint8은 8개의 bit를 사용해서 정수를 표현하는 방식이다. bit는 0과 1 중 하나를 표현할 수 있는 컴퓨터 데이터 형식의 가장 작은 단위이며, 이게 8개가 있으므로 2**8=256개의 정수를 표현할 수 있다. 그리고 uint8은 0~255까지의 정수를 표현하며, int8은 bit 하나를 떼어 음수/양수를 표현하여 -128~127까지의 정수를 표현한다. 일반적인 JPEG나 PNG같은 이미지는 픽셀 하나의 채널 값 하나를 0~255로, 즉 uint8로 표현한다.</li>
+</ul>
+
+<h3 id="결론">결론</h3>
+<p><code class="language-plaintext highlighter-rouge">OpenCV</code>에서 <code class="language-plaintext highlighter-rouge">TypeError: Expected Ptr&lt;cv::UMat&gt; for argument 'src'</code> 에러가 뜬다면 이미지의 경로가 잘못 되지는 않았는지, 아니면 이미지의 형식이 uint인지 확인해보자.</p>
+:ET

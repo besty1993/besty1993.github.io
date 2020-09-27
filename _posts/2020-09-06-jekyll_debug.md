@@ -1,8 +1,8 @@
 ---
-title:  "`load': marshal data too short (ArgumentError) 문제 해결"
+title:  "Jekyll `load': marshal data too short (ArgumentError) 디버깅"
 layout: single
 categories: 
-  - etc.
+  - Debugging
 last_modified_at: 2020-09-06T19:00:00
 classes: wide
 tags:
