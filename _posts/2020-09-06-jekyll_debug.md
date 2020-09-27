@@ -1,5 +1,5 @@
 ---
-title:  "Jekyll `load': marshal data too short (ArgumentError) 디버깅"
+title:  "[Jekyll] `load': marshal data too short (ArgumentError) 디버깅"
 layout: single
 categories: 
   - Debugging
