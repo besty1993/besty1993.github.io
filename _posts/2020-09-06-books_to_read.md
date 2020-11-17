@@ -17,10 +17,14 @@ tags:
   - 웹서핑하다가 우연히 찾은 책. Random Variable, Measure Theory 등 기초를 복습하고 싶을 때 읽을 예정.
   - 저자가 지금 구글의 엔지니어링 디렉터라고 함
 
+
 - [존이님 블로그](https://blog.naver.com/prologue/PrologueList.nhn?blogId=mykepzzang)
   - 2014년부터 꾸준히 고퀄리티의 강의 자료를 업로드하고 계시는 대단한 분
   - 수치해석, 유체역학 등의 수학 및 공학 위주의 포스트가 많으며, 특히 통계학의 경우 100개에 달하는 포스트가 인상적임
 
+- [Forecasting: Principles and Practice](https://otexts.com/fppkr/)
+  - 경영학 학부생 대상의 시계열 예측에 관한 책. 
+  - 선형회귀 모델, ARIMA, 동적 회귀 모델 등에 대해 자세히 다룸
 
 ## 인터넷 강의 목록
 - [T academy](https://tacademy.skplanet.com/frontMain.action)
