@@ -32,7 +32,7 @@ tags:
   - 회원가입하고 수업을 다 들으면 인증서?를 주는데 딱히 필요 없으면 [유튜브](https://www.youtube.com/channel/UCtV98yyffjUORQRGTuLHomw)에도 강의가 올라와있음
 
 - [이상엽Math](https://www.youtube.com/channel/UC-7H7ZImLfGF97Y_EJ0vZzA)
-  -유튜브 수학 강의. '취미로 수학하자' 시리즈로 집합론, 선형대수학, 해석학, 위상수학이 있으며, 퀄리티가 매우 높음
+  - 유튜브 수학 강의. '취미로 수학하자' 시리즈로 집합론, 선형대수학, 해석학, 위상수학이 있으며, 퀄리티가 매우 높음
 
 - [3Blue1Brown](https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw)
   - 영어 기반 수학 유튜브 채널. 20분 이내의 짧은 호흡과 현란하고 쉬운 그래픽이 특징
