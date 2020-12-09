@@ -31,7 +31,7 @@ EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [[pape
 - Is there a principled method to scale up ConvNets that can achieve better accuracy and efficiency?
 
 <p align="center">
-  <img src="/assets/images/EfficientNet/EfficientNetSample.png">
+  <img src="/assets/images/EfficientNet/EfficientNetSample.PNG">
 
 # Compound Scaling Method
 ## Problem Formulation
@@ -68,7 +68,7 @@ $$\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad \$$
 - Higher Resolution : Captures more fine-grained patterns
 
 <p align="center">
-  <img src="/assets/images/EfficientNet/OneDimensionScale.png">
+  <img src="/assets/images/EfficientNet/OneDimensionScale.PNG">
 
 - Scaling up any dimension of network improves accuracy, but **the accuracy gain diminishes for bigger models**
 
@@ -77,14 +77,14 @@ $$\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad \$$
 - To validate this intuition, they scaled network width w by fixing d and r
 
 <p align="center">
-  <img src="/assets/images/EfficientNet/CompoundScaling.png">
+  <img src="/assets/images/EfficientNet/CompoundScaling.PNG">
 
 - For better accuracy and efficiency, it is critical to **balance the network width, depth, and resolution**
 
 ## Compound Scaling Method
 
 <p align="center">
-  <img src="/assets/images/EfficientNet/CSM.png">
+  <img src="/assets/images/EfficientNet/CSM.PNG">
 
 - $\alpha, \beta, \gamma$ : constants to adjust the network depth, width, image resolution, respectively. These components are determined by a small grid search
 - $\phi$ : variable to decide how many resources to use for model scaling
