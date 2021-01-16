@@ -4,7 +4,7 @@ layout: single
 categories: 
   - PaperReview
 last_modified_at: 2020-12-08
-classes: narrow
+# classes: wide
 tags:
   - ImageClassification
   - DeepLearning
@@ -26,9 +26,9 @@ EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [[pape
 
 # Problems to solve
 - In previous work, it was common to scale only one of the three dimensions : depth, width, and image resolution
-> - Depth : The number of ConvNet layers
-> - Width : The number of channels of each ConvNet layer
-> - Image Resolution : Input image size(Height*Width)
+  - Depth : The number of ConvNet layers
+  - Width : The number of channels of each ConvNet layer
+  - Image Resolution : Input image size (Height*Width)
 - Is there a principled method to scale up ConvNets that can achieve better accuracy and efficiency?
 
 <p align="center">
