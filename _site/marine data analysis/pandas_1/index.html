@@ -23,7 +23,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Random Dev Blog">
 <meta property="og:title" content="Pandas를 이용한 데이터 분석(1)">
-<meta property="og:url" content="http://localhost:4000/marine%20data%20analysis/pandas_1/">
+<meta property="og:url" content="http://0.0.0.0:4000/marine%20data%20analysis/pandas_1/">
 
 
   <meta property="og:description" content="Pandas란 무엇인가?    pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.">
@@ -34,11 +34,11 @@
 
 
 
-  <meta property="article:published_time" content="2020-09-06T00:00:00+09:00">
+  <meta property="article:published_time" content="2020-10-13T00:00:00-05:00">
 
 
 
-  <meta property="article:modified_time" content="2020-09-06T21:06:00+09:00">
+  <meta property="article:modified_time" content="2020-09-06T07:06:00-05:00">
 
 
 
@@ -47,7 +47,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/marine%20data%20analysis/pandas_1/">
+<link rel="canonical" href="http://0.0.0.0:4000/marine%20data%20analysis/pandas_1/">
 
 
 
@@ -58,7 +58,7 @@
     
       "@type": "Person",
       "name": "Chase Yang",
-      "url": "http://localhost:4000/"
+      "url": "http://0.0.0.0:4000/"
     
   }
 </script>
@@ -107,9 +107,37 @@
 
 <!-- end custom head snippets -->
 
+    <!--
+    <!-- Begin section for dataframe table formatting (https://chukycheese.github.io/translation/github/jupyter%20notebook/post-jupyter-notebooks-to-your-github-blog/)-->
+    <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <!-- End section for dataframe table formatting -->
+    -->
+  
+    
   </head>
 
-  <body class="layout--single wide">
+  <body class="layout--single">
     <nav class="skip-links">
   <h2 class="screen-reader-text">Skip links</h2>
   <ul>
@@ -289,8 +317,8 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Pandas를 이용한 데이터 분석(1)">
     <meta itemprop="description" content="Pandas란 무엇인가?  pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.">
-    <meta itemprop="datePublished" content="2020-09-06T00:00:00+09:00">
-    <meta itemprop="dateModified" content="2020-09-06T21:06:00+09:00">
+    <meta itemprop="datePublished" content="2020-10-13T00:00:00-05:00">
+    <meta itemprop="dateModified" content="2020-09-06T07:06:00-05:00">
 
     <div class="page__inner-wrap">
       
@@ -311,7 +339,7 @@
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          4 minute read
+          10 minute read
         
       </span>
     
@@ -329,6 +357,7 @@
 </blockquote>
 
 <p><a href="https://pandas.pydata.org/">Pandas 홈페이지</a>에 나와있는 설명문이다. 빠르고 유연하고 기능이 많으며, 사용하기 쉬운 파이썬 기반의 오픈소스 데이터 분석 및 조작 도구라고 한다.
+많은 파이썬 유저들이 정형 데이터를 분석할 때 애용하고 있는 라이브러리이다.
 좀 더 설명하면 파이썬에서 엑셀과 같이 데이터를 표형식으로 읽고, 바꾸고, 분석하는 도구라고 할 수 있겠다. 엑셀만큼 쉽지는 않겠지만 한번 익숙해진다면 많은 양의 데이터를 엑셀보다 훨씬 빠르게 처리할 수 있을 것이다.
 <!-- Pandas라는 라이브러리를 사용해 조위 관측데이터를 분석해보고자 한다. --></p>
 
@@ -346,500 +375,1654 @@
 
 <p><br /></p>
 
-<h2 id="샘플-데이터프레임-생성">샘플 데이터프레임 생성</h2>
+<h2 id="샘플-데이터셋을-이용한-pandas-기능-살펴보기">샘플 데이터셋을 이용한 Pandas 기능 살펴보기</h2>
 
-<p>Pandas에서는 표 형식의 데이터베이스를 <code class="language-plaintext highlighter-rouge">DataFrame</code>이라고 부른다.<br />
-간단한 DataFrame을 만들어보자</p>
+<p>데이터 가시화 라이브러리인 <code class="language-plaintext highlighter-rouge">Seaborn</code>에서는 몇몇 샘플 데이터셋을 제공한다. 이 중 하나인 펭귄 데이터셋을 읽어서 <code class="language-plaintext highlighter-rouge">Pandas</code>의 기능을 살펴보도록 하겠다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">dic</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">'이름'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'김A'</span><span class="p">,</span> <span class="s">'최B'</span><span class="p">,</span> <span class="s">'이C'</span><span class="p">],</span>
-        <span class="s">'성별'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'남'</span><span class="p">,</span> <span class="s">'여'</span><span class="p">,</span> <span class="s">'남'</span><span class="p">],</span>
-        <span class="s">'나이'</span> <span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">44</span><span class="p">],</span>
-        <span class="s">'키'</span> <span class="p">:</span> <span class="p">[</span><span class="mf">167.1</span><span class="p">,</span> <span class="mf">165.5</span><span class="p">,</span> <span class="mf">180.5</span><span class="p">],</span>
-        <span class="s">'출신'</span> <span class="p">:</span> <span class="p">[</span><span class="s">'제주'</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">],</span>
-    <span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dic</span><span class="p">)</span>
+<p>먼저 다음과 같은 라이브러리를 사용할 것이다.</p>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 </code></pre></div></div>
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: right"> </th>
-      <th style="text-align: left">이름</th>
-      <th style="text-align: left">성별</th>
-      <th style="text-align: right">나이</th>
-      <th style="text-align: right">키</th>
-      <th style="text-align: left">출신</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: right">0</td>
-      <td style="text-align: left">김A</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">25</td>
-      <td style="text-align: right">167.1</td>
-      <td style="text-align: left">제주</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">1</td>
-      <td style="text-align: left">최B</td>
-      <td style="text-align: left">여</td>
-      <td style="text-align: right">32</td>
-      <td style="text-align: right">165.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">2</td>
-      <td style="text-align: left">이C</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">44</td>
-      <td style="text-align: right">180.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>간단한 DataFrame을 만들어보았다.
-데이터로 사용된 것은 <code class="language-plaintext highlighter-rouge">dic</code>이라고 명명한 <code class="language-plaintext highlighter-rouge">Dictionary</code>이며, key로는 <strong>이름, 성별, 나이, 키, 출신</strong>을 가지고 있고 각 key의 value로는 사람의 정보가 있다.
-이러한 데이터로 DataFrame을 만들기 위해서는 간단하게 <code class="language-plaintext highlighter-rouge">pd.DataFrame(dic)</code>이라 적으면 된다.</p>
-
-<p>여기에서 <code class="language-plaintext highlighter-rouge">['김A', '남', 25, 167.1, '제주']</code>와 같이 각 데이터는 행으로 나뉘어져 있으며 <strong>row</strong>에 해당한다.
-<code class="language-plaintext highlighter-rouge">['김A', '최B', '이C']</code>와 같이 각 열의 정보는 <strong>column</strong>이라고 한다.</p>
-
-<p>또한, 위에 생성된 표를 보면 <strong>0, 1, 2</strong>와 같은 번호가 새로 만들어졌음을 알 수 있다.
-이러한 숫자와 <strong>이름, 성별, 나이, 키, 출신</strong>과 같은 열 정보는 <strong>index</strong>라고 하며, 데이터를 특정지을 때(indexing) 사용된다.</p>
-
-<p>위의 예시에서 출신 column에 <strong>np.nan</strong>값이 있는데, 이는 결측값을 표현한 것이다.
-‘nan’은 ‘Not a Number’이라는 의미로, 출신지가 숫자 데이터는 아니지만 데이터가 없다는 의미로 사용된다.</p>
-
 <p><br /></p>
 
-<h2 id="데이터-파악">데이터 파악</h2>
+<h2 id="샘플-펭귄-데이터셋-읽기--dataframehead">샘플 펭귄 데이터셋 읽기 &amp; DataFrame.head()</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Pandas</code>에서 데이터셋을 처리하기 위해 <strong>DataFrame</strong>이란 데이터 형식을 사용한다.</li>
+  <li>DataFrame 변수는 주로 약어로 df라는 이름으로 선언된다.</li>
+</ul>
 
-<p>위의 예시는 작은 데이터셋이라서 한 눈에 파악할 수 있지만 실제 데이터는 매우 거대할 수 있으므로 파악하는 데에 어려움이 따른다. 이를 위해 Pandas는 여러가지 함수를 제공한다.</p>
+<p><code class="language-plaintext highlighter-rouge">sns.load_dataset('penguins')</code>로 펭귄 데이터셋을 읽어준 후, <code class="language-plaintext highlighter-rouge">DataFrame.head()</code>로 데이터셋의 첫 몇 행을 확인해보자.</p>
 
-<h3 id="dataframehead">DataFrame.head()</h3>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">())</span>
-</code></pre></div></div>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: right"> </th>
-      <th style="text-align: left">이름</th>
-      <th style="text-align: left">성별</th>
-      <th style="text-align: right">나이</th>
-      <th style="text-align: right">키</th>
-      <th style="text-align: left">출신</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: right">0</td>
-      <td style="text-align: left">김A</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">25</td>
-      <td style="text-align: right">167.1</td>
-      <td style="text-align: left">제주</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">1</td>
-      <td style="text-align: left">최B</td>
-      <td style="text-align: left">여</td>
-      <td style="text-align: right">32</td>
-      <td style="text-align: right">165.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">2</td>
-      <td style="text-align: left">이C</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">44</td>
-      <td style="text-align: right">180.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><br /></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; print(df.head(2))
-</code></pre></div></div>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: right"> </th>
-      <th style="text-align: left">이름</th>
-      <th style="text-align: left">성별</th>
-      <th style="text-align: right">나이</th>
-      <th style="text-align: right">키</th>
-      <th style="text-align: left">출신</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: right">0</td>
-      <td style="text-align: left">김A</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">25</td>
-      <td style="text-align: right">167.1</td>
-      <td style="text-align: left">제주</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">1</td>
-      <td style="text-align: left">최B</td>
-      <td style="text-align: left">여</td>
-      <td style="text-align: right">32</td>
-      <td style="text-align: right">165.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><br /></p>
-
-<p><code class="language-plaintext highlighter-rouge">DataFrame.head()</code>는 앞의 몇 줄만을 출력하는 함수이다. 기본값은 5줄이며, 괄호 안에 숫자를 넣어서 몇 줄만 출력할 것인지 설정 가능하다.</p>
-
-<p><br /></p>
-
-<h3 id="dataframetail">DataFrame.tail()</h3>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">tail</span><span class="p">())</span>
-</code></pre></div></div>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: right"> </th>
-      <th style="text-align: left">이름</th>
-      <th style="text-align: left">성별</th>
-      <th style="text-align: right">나이</th>
-      <th style="text-align: right">키</th>
-      <th style="text-align: left">출신</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: right">0</td>
-      <td style="text-align: left">김A</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">25</td>
-      <td style="text-align: right">167.1</td>
-      <td style="text-align: left">제주</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">1</td>
-      <td style="text-align: left">최B</td>
-      <td style="text-align: left">여</td>
-      <td style="text-align: right">32</td>
-      <td style="text-align: right">165.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">2</td>
-      <td style="text-align: left">이C</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">44</td>
-      <td style="text-align: right">180.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><br /></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; print(df.tail(2))
-</code></pre></div></div>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: right"> </th>
-      <th style="text-align: left">이름</th>
-      <th style="text-align: left">성별</th>
-      <th style="text-align: right">나이</th>
-      <th style="text-align: right">키</th>
-      <th style="text-align: left">출신</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: right">1</td>
-      <td style="text-align: left">최B</td>
-      <td style="text-align: left">여</td>
-      <td style="text-align: right">32</td>
-      <td style="text-align: right">165.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">2</td>
-      <td style="text-align: left">이C</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">44</td>
-      <td style="text-align: right">180.5</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><br /></p>
-
-<p><code class="language-plaintext highlighter-rouge">DataFrame.tail()</code>는  <code class="language-plaintext highlighter-rouge">head</code>의 반대로, 뒤에서 몇 줄만을 출력하는 함수이다. 마찬가지로 기본값은 5줄이며, 괄호 안에 숫자를 넣어서 몇 줄만 출력할 것인지 설정 가능하다.</p>
-
-<p><br /></p>
-
-<h3 id="dataframeshape">DataFrame.shape</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">DataFrame.shape</code>는  데이터의 row 수와 column 수를 출력한다. 위의 예시에서는 row가 3개, column이 5개이므로 (3,5)라고 출력하고 있다.</p>
-
-<p><br /></p>
-
-<h3 id="dataframeinfo">DataFrame.info()</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">info</span><span class="p">())</span>
-<span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">pandas</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">frame</span><span class="p">.</span><span class="n">DataFrame</span><span class="s">'&gt;
-RangeIndex: 3 entries, 0 to 2
-Data columns (total 5 columns):
- #   Column  Non-Null Count  Dtype  
----  ------  --------------  -----  
- 0   이름      3 non-null      object 
- 1   성별      3 non-null      object 
- 2   나이      3 non-null      int64  
- 3   키       3 non-null      float64
- 4   출신      1 non-null      object 
-dtypes: float64(1), int64(1), object(3)
-memory usage: 248.0+ bytes
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">sns</span><span class="p">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s">'penguins'</span><span class="p">)</span> <span class="c1">## 샘플 데이터셋을 읽어서 df로 선언
+</span><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1">## 첫 10개 행 확인
 </span></code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">DataFrame.info()</code>는  데이터의 형식 정보와 같은 것을 출력한다.
-위의 출력 결과를 보면 각 column 별 null값이 아닌 값의 갯수, 데이터 형식 등을 알 수 있다.</p>
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>island</th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
+      <th>sex</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.1</td>
+      <td>18.7</td>
+      <td>181.0</td>
+      <td>3750.0</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.5</td>
+      <td>17.4</td>
+      <td>186.0</td>
+      <td>3800.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>40.3</td>
+      <td>18.0</td>
+      <td>195.0</td>
+      <td>3250.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>36.7</td>
+      <td>19.3</td>
+      <td>193.0</td>
+      <td>3450.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.3</td>
+      <td>20.6</td>
+      <td>190.0</td>
+      <td>3650.0</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>38.9</td>
+      <td>17.8</td>
+      <td>181.0</td>
+      <td>3625.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.2</td>
+      <td>19.6</td>
+      <td>195.0</td>
+      <td>4675.0</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>34.1</td>
+      <td>18.1</td>
+      <td>193.0</td>
+      <td>3475.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>42.0</td>
+      <td>20.2</td>
+      <td>190.0</td>
+      <td>4250.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <p><br /></p>
 
-<h3 id="dataframedescribe">DataFrame.describe()</h3>
+<h2 id="dataframetail">DataFrame.tail()</h2>
+<p>반대로 <code class="language-plaintext highlighter-rouge">DataFrame.tail()</code>을 사용하여 마지막 몇 행을 확인하는 것도 가능하다.
+안에 변수를 넣지 않는다면 기본값으로 5개의 행을 확인한다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span><span class="p">.</span><span class="n">describe</span><span class="p">()</span>
-</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span> <span class="c1">## 마지막 5개 행 확인
+</span></code></pre></div></div>
 
-<table>
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
   <thead>
-    <tr>
-      <th style="text-align: left"> </th>
-      <th style="text-align: right">나이</th>
-      <th style="text-align: right">키</th>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>island</th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
+      <th>sex</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: left">count</td>
-      <td style="text-align: right">3</td>
-      <td style="text-align: right">3</td>
+      <th>339</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <td style="text-align: left">mean</td>
-      <td style="text-align: right">33.6667</td>
-      <td style="text-align: right">171.033</td>
+      <th>340</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>46.8</td>
+      <td>14.3</td>
+      <td>215.0</td>
+      <td>4850.0</td>
+      <td>FEMALE</td>
     </tr>
     <tr>
-      <td style="text-align: left">std</td>
-      <td style="text-align: right">9.60902</td>
-      <td style="text-align: right">8.23731</td>
+      <th>341</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>50.4</td>
+      <td>15.7</td>
+      <td>222.0</td>
+      <td>5750.0</td>
+      <td>MALE</td>
     </tr>
     <tr>
-      <td style="text-align: left">min</td>
-      <td style="text-align: right">25</td>
-      <td style="text-align: right">165.5</td>
+      <th>342</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>45.2</td>
+      <td>14.8</td>
+      <td>212.0</td>
+      <td>5200.0</td>
+      <td>FEMALE</td>
     </tr>
     <tr>
-      <td style="text-align: left">25%</td>
-      <td style="text-align: right">28.5</td>
-      <td style="text-align: right">166.3</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">50%</td>
-      <td style="text-align: right">32</td>
-      <td style="text-align: right">167.1</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">75%</td>
-      <td style="text-align: right">38</td>
-      <td style="text-align: right">173.8</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">max</td>
-      <td style="text-align: right">44</td>
-      <td style="text-align: right">180.5</td>
+      <th>343</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>49.9</td>
+      <td>16.1</td>
+      <td>213.0</td>
+      <td>5400.0</td>
+      <td>MALE</td>
     </tr>
   </tbody>
 </table>
+</div>
 
-<p><code class="language-plaintext highlighter-rouge">DataFrame.describe</code>는  데이터의 평균, 최소, 최대, 하위 25%, 하위 50%, 하위 75%에 위치한 값 등을 출력한다.<br />
-숫자 데이터가 아닌 경우에는 <code class="language-plaintext highlighter-rouge">include='all'</code>을 추가함으로써 알 수 있다.</p>
+<p><br /></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span><span class="p">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s">'all'</span><span class="p">)</span>
+<h2 id="dataframeinfo">DataFrame.info()</h2>
+<p><code class="language-plaintext highlighter-rouge">DataFrame.info()</code>를 사용하면 데이터의 각 열 별로 데이터 형식이나 값의 개수 등을 확인할 수 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">info</span><span class="p">()</span>
+<span class="c1">## cf. object : int, string, list 등 모든 종류의 데이터
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 344 entries, 0 to 343
+Data columns (total 7 columns):
+ #   Column             Non-Null Count  Dtype  
+---  ------             --------------  -----  
+ 0   species            344 non-null    object 
+ 1   island             344 non-null    object 
+ 2   bill_length_mm     342 non-null    float64
+ 3   bill_depth_mm      342 non-null    float64
+ 4   flipper_length_mm  342 non-null    float64
+ 5   body_mass_g        342 non-null    float64
+ 6   sex                333 non-null    object 
+dtypes: float64(4), object(3)
+memory usage: 18.9+ KB
 </code></pre></div></div>
 
-<table>
+<p><br /></p>
+
+<h2 id="dataframedescribe">DataFrame.describe()</h2>
+<p>데이터의 각 열 별 평균, 표준편차, 최솟값, 중앙값, 최댓값 등을 한번에 확인할 수 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">describe</span><span class="p">()</span>  <span class="c1">## 데이터의 각 열 별 평균, 표준편차, 최솟값, 중앙값, 최댓값
+</span></code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
   <thead>
-    <tr>
-      <th style="text-align: left"> </th>
-      <th style="text-align: left">이름</th>
-      <th style="text-align: left">성별</th>
-      <th style="text-align: right">나이</th>
-      <th style="text-align: right">키</th>
-      <th style="text-align: left">출신</th>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: left">count</td>
-      <td style="text-align: left">3</td>
-      <td style="text-align: left">3</td>
-      <td style="text-align: right">3</td>
-      <td style="text-align: right">3</td>
-      <td style="text-align: left">1</td>
+      <th>count</th>
+      <td>342.000000</td>
+      <td>342.000000</td>
+      <td>342.000000</td>
+      <td>342.000000</td>
     </tr>
     <tr>
-      <td style="text-align: left">unique</td>
-      <td style="text-align: left">3</td>
-      <td style="text-align: left">2</td>
-      <td style="text-align: right">nan</td>
-      <td style="text-align: right">nan</td>
-      <td style="text-align: left">1</td>
+      <th>mean</th>
+      <td>43.921930</td>
+      <td>17.151170</td>
+      <td>200.915205</td>
+      <td>4201.754386</td>
     </tr>
     <tr>
-      <td style="text-align: left">top</td>
-      <td style="text-align: left">이C</td>
-      <td style="text-align: left">남</td>
-      <td style="text-align: right">nan</td>
-      <td style="text-align: right">nan</td>
-      <td style="text-align: left">제주</td>
+      <th>std</th>
+      <td>5.459584</td>
+      <td>1.974793</td>
+      <td>14.061714</td>
+      <td>801.954536</td>
     </tr>
     <tr>
-      <td style="text-align: left">freq</td>
-      <td style="text-align: left">1</td>
-      <td style="text-align: left">2</td>
-      <td style="text-align: right">nan</td>
-      <td style="text-align: right">nan</td>
-      <td style="text-align: left">1</td>
+      <th>min</th>
+      <td>32.100000</td>
+      <td>13.100000</td>
+      <td>172.000000</td>
+      <td>2700.000000</td>
     </tr>
     <tr>
-      <td style="text-align: left">mean</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: right">33.6667</td>
-      <td style="text-align: right">171.033</td>
-      <td style="text-align: left">nan</td>
+      <th>25%</th>
+      <td>39.225000</td>
+      <td>15.600000</td>
+      <td>190.000000</td>
+      <td>3550.000000</td>
     </tr>
     <tr>
-      <td style="text-align: left">std</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: right">9.60902</td>
-      <td style="text-align: right">8.23731</td>
-      <td style="text-align: left">nan</td>
+      <th>50%</th>
+      <td>44.450000</td>
+      <td>17.300000</td>
+      <td>197.000000</td>
+      <td>4050.000000</td>
     </tr>
     <tr>
-      <td style="text-align: left">min</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: right">25</td>
-      <td style="text-align: right">165.5</td>
-      <td style="text-align: left">nan</td>
+      <th>75%</th>
+      <td>48.500000</td>
+      <td>18.700000</td>
+      <td>213.000000</td>
+      <td>4750.000000</td>
     </tr>
     <tr>
-      <td style="text-align: left">25%</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: right">28.5</td>
-      <td style="text-align: right">166.3</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">50%</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: right">32</td>
-      <td style="text-align: right">167.1</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">75%</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: right">38</td>
-      <td style="text-align: right">173.8</td>
-      <td style="text-align: left">nan</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">max</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: left">nan</td>
-      <td style="text-align: right">44</td>
-      <td style="text-align: right">180.5</td>
-      <td style="text-align: left">nan</td>
+      <th>max</th>
+      <td>59.600000</td>
+      <td>21.500000</td>
+      <td>231.000000</td>
+      <td>6300.000000</td>
     </tr>
   </tbody>
 </table>
+</div>
 
-<h2 id="pandas-series">Pandas Series</h2>
+<p>여기에 변수로 <code class="language-plaintext highlighter-rouge">include='all'</code>을 추가하게 된다면 str같은 object 데이터에 대해서도 최빈값 등을 알려준다.</p>
 
-<p>표 형식의 데이터가 <code class="language-plaintext highlighter-rouge">pandas.DataFrame</code>이라고 한다면 그 각각의 열 또는 행은 <code class="language-plaintext highlighter-rouge">pandas.Series</code>라고 할 수 있다.<br />
-간단하게 0번째 index의 데이터를 Series로 뽑아보자.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">이름</span>       <span class="n">김A</span>
-<span class="n">성별</span>        <span class="n">남</span>
-<span class="n">나이</span>       <span class="mi">25</span>
-<span class="n">키</span>     <span class="mf">167.1</span>
-<span class="n">출신</span>       <span class="n">제주</span>
-<span class="n">Name</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s">'all'</span><span class="p">)</span> 
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">DataFrame.loc</code>을 사용하여 0번쨰 index의 정보를 전부 출력하였다. 이처럼 <code class="language-plaintext highlighter-rouge">Series</code>는 1차원 데이터를 나타내는 형식이다. <code class="language-plaintext highlighter-rouge">Series</code>의 구성요소를 살펴보면, <code class="language-plaintext highlighter-rouge">김A, 남, 25, 167.1, 제주</code>와 같은 <strong>데이터</strong>가 있고, <code class="language-plaintext highlighter-rouge">이름, 성별, 나이, 키, 출신</code>과 같은 <strong>index</strong>가 있다. 그리고 마지막으로 <code class="language-plaintext highlighter-rouge">0</code>이라는 <strong>Name</strong>이 있다.</p>
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>island</th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
+      <th>sex</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>344</td>
+      <td>344</td>
+      <td>342.000000</td>
+      <td>342.000000</td>
+      <td>342.000000</td>
+      <td>342.000000</td>
+      <td>333</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>3</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>Adelie</td>
+      <td>Biscoe</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>152</td>
+      <td>168</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>168</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>43.921930</td>
+      <td>17.151170</td>
+      <td>200.915205</td>
+      <td>4201.754386</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5.459584</td>
+      <td>1.974793</td>
+      <td>14.061714</td>
+      <td>801.954536</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>32.100000</td>
+      <td>13.100000</td>
+      <td>172.000000</td>
+      <td>2700.000000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>39.225000</td>
+      <td>15.600000</td>
+      <td>190.000000</td>
+      <td>3550.000000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>44.450000</td>
+      <td>17.300000</td>
+      <td>197.000000</td>
+      <td>4050.000000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>48.500000</td>
+      <td>18.700000</td>
+      <td>213.000000</td>
+      <td>4750.000000</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>59.600000</td>
+      <td>21.500000</td>
+      <td>231.000000</td>
+      <td>6300.000000</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><br /></p>
+
+<h2 id="평균-중앙값-최댓값-최솟값">평균, 중앙값, 최댓값, 최솟값</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">'평균'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">중앙값'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">median</span><span class="p">())</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">최댓값'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="nb">max</span><span class="p">())</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">최솟값'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="nb">min</span><span class="p">())</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>평균
+bill_length_mm         43.921930
+bill_depth_mm          17.151170
+flipper_length_mm     200.915205
+body_mass_g          4201.754386
+dtype: float64
+
+중앙값
+bill_length_mm         44.45
+bill_depth_mm          17.30
+flipper_length_mm     197.00
+body_mass_g          4050.00
+dtype: float64
+
+최댓값
+species                 Gentoo
+island               Torgersen
+bill_length_mm            59.6
+bill_depth_mm             21.5
+flipper_length_mm          231
+body_mass_g               6300
+dtype: object
+
+최솟값
+species              Adelie
+island               Biscoe
+bill_length_mm         32.1
+bill_depth_mm          13.1
+flipper_length_mm       172
+body_mass_g            2700
+dtype: object
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="데이터-가시화">데이터 가시화</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Seaborn</code>을 이용하여 간단하게 데이터를 가시화해보자</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## 여러 그래프 그리기 1 : plt.subplots
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'island'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'species'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'sex'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1">## 여러 그래프 그리기 2 : plt.subplot
+</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1">## nrows, ncols, index
+</span><span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'island'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>   <span class="c1">## nrows, ncols, index
+</span><span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'species'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>   <span class="c1">## nrows, ncols, index
+</span><span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'sex'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/2020-10-13-pandas_1_9_0.png" alt="png" /></p>
+
+<p><img src="/assets/images/2020-10-13-pandas_1_9_1.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'island'</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="s">'species'</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/2020-10-13-pandas_1_10_0.png" alt="png" /></p>
+
+<p><br /></p>
+
+<h2 id="데이터-슬라이싱">데이터 슬라이싱</h2>
+<p>데이터셋이라면 당연 특정 열이나 행만 뽑아내거나 특정 조건 하에 데이터를 필터링할 수 있어야 한다.</p>
+
+<p>우선 데이터의 열 데이터는 column이라 불리며, <code class="language-plaintext highlighter-rouge">DataFrame.columns</code>로 확인할 수 있다. 펭귄 데이터셋의 경우 <em>종, 부리의 길이, 부리의 깊이, 물갈퀴의 길이, 몸무게, 성별</em>의 열을 가지고 있다.</p>
+
+<p>행 데이터는 index로써 표현된다. 펭귄 데이터셋의 경우 index는 0부터 시작하는 int값이지만, 굳이 int값이 아니어도 되며 웬만한 데이터 형식이면 다 가능하다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">'COLUMN'</span><span class="p">,</span> <span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'INDEX'</span><span class="p">,</span><span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>COLUMN Index(['species', 'island', 'bill_length_mm', 'bill_depth_mm',
+       'flipper_length_mm', 'body_mass_g', 'sex'],
+      dtype='object')
+INDEX RangeIndex(start=0, stop=344, step=1)
+</code></pre></div></div>
+
+<h3 id="행-추출">행 추출</h3>
+
+<p>기본적으로 행을 추출하기 위해서는 <code class="language-plaintext highlighter-rouge">DataFrame.loc</code>을 사용한다. Dictionary에 key를 넣듯 대괄호 안에 index의 이름을 넣어주면 그 index에 해당하는 데이터가 출력된다.</p>
+
+<p>여기에서 한 가지 중요한 점이, 대괄호 안에 들어갈 것이 <strong>index의 값(혹은 이름)</strong>이라는 것이다. 위에서도 언급햇듯이 index가 굳이 int값이 아니어도 되며, str일 수도 있다.
+만약에 DataFrame df에서 index 값이 ‘asdf’인 행을 출력하고 싶다면 <code class="language-plaintext highlighter-rouge">df['asdf']</code>라고 적으면 된다.</p>
+
+<p>이외에도 index의 값이 아니라 index의 순서로 행을 출력하는 것이 가능하다. 이는 <code class="language-plaintext highlighter-rouge">DataFrame.iloc</code>으로 할 수 있다. iloc을 사용하게 되면 list에서 원하는 값을 출력하듯 값이 위치한 순서를 입력하면 된다.</p>
+
+<p>예를 들면, 펭귄 데이터셋에서 <code class="language-plaintext highlighter-rouge">df.iloc[-5]</code>는 데이터셋에서 마지막에서 5번째 행의 데이터를 출력하지만 index의 값이 -5인 행은 없기 때문에 <code class="language-plaintext highlighter-rouge">df.loc[-5]</code>는 오류가 난다.</p>
+
+<p><br /></p>
+
+<p>대괄호 안에 list를 넣어서 복수의 행을 출력할 수도 있다. <code class="language-plaintext highlighter-rouge">df.loc[[3, 5, 7, 10]]</code>처럼 입력한다면 index값이 3, 5, 7, 10인 행을 출력한다.
+이외에도 <code class="language-plaintext highlighter-rouge">df.loc[339:350:2]</code>나 <code class="language-plaintext highlighter-rouge">df.iloc[339:350:2]</code>처럼 slicing을 할 수 있지만 이 경우는 index값이 int형식이라 가능한 것이고 일반적으로는 iloc만 slicing할 수 있다.</p>
 
 <blockquote>
-  <p><code class="language-plaintext highlighter-rouge">DataFrame.loc</code>은 Pandas를 이용한다면 반드시 필요한 도구인데, 이후에 다시 언급하겠다.</p>
+  <p>loc이나 iloc에 하나의 행만 출력하도록 값을 넣는다면 복수의 행을 출력할 때와는 데이터가 다른 식으로 나온다. 
+이를 <strong>Series</strong>라 하며, 하나의 행 또는 열을 다루기 위한 데이터 형식이다. 
+만약 하나의 행만을 출력하되 형식이 Series가 아니라 DataFrame으로 나오도록 하고 싶다면 <code class="language-plaintext highlighter-rouge">df.loc[[5]]</code>처럼 list로 만들어 넣어주면 된다.</p>
 </blockquote>
 
-<p>만약 column 데이터를 출력하고 싶다면 다음과 같이 DataFrame을 Dictionary에 key를 입력하듯 쓸 수 있다.<br />
-이외에도 loc을 이용한 방법도 추가로 있지만 <code class="language-plaintext highlighter-rouge">DataFrame.loc</code>과 같이 언급하겠다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## 특정 행 추출 : df.loc, df.iloc
+</span><span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">339</span><span class="p">])</span>  <span class="c1">## index의 이름이 339인 데이터 출력
+</span><span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>  <span class="c1">## 마지막에서 5번째 index의 데이터 출력
+</span>
+<span class="c1">## 복수의 행 추출 : list 사용
+</span><span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">25</span><span class="p">]</span>
+<span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'이름'</span><span class="p">])</span>
-<span class="mi">0</span>    <span class="n">김A</span>
-<span class="mi">1</span>    <span class="n">최B</span>
-<span class="mi">2</span>    <span class="n">이C</span>
-<span class="n">Name</span><span class="p">:</span> <span class="n">이름</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
+<span class="c1">## 이 때, loc[] 안에 int를 넣으면 Series가 출력, list를 넣으면 DataFrame이 출력됨
+## Series는 데이터의 한 열 또는 행을 표현하기 위한 데이터 형식
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>species              Gentoo
+island               Biscoe
+bill_length_mm          NaN
+bill_depth_mm           NaN
+flipper_length_mm       NaN
+body_mass_g             NaN
+sex                     NaN
+Name: 339, dtype: object
+species              Gentoo
+island               Biscoe
+bill_length_mm          NaN
+bill_depth_mm           NaN
+flipper_length_mm       NaN
+body_mass_g             NaN
+sex                     NaN
+Name: 339, dtype: object
 </code></pre></div></div>
 
-<h3 id="seriesunique">Series.unique()</h3>
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s">'출신'</span><span class="p">].</span><span class="n">unique</span><span class="p">()</span>
-<span class="n">array</span><span class="p">([</span><span class="s">'제주'</span><span class="p">,</span> <span class="n">nan</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>island</th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
+      <th>sex</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.3</td>
+      <td>20.6</td>
+      <td>190.0</td>
+      <td>3650.0</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>37.8</td>
+      <td>17.1</td>
+      <td>186.0</td>
+      <td>3300.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>36.6</td>
+      <td>17.8</td>
+      <td>185.0</td>
+      <td>3700.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Adelie</td>
+      <td>Biscoe</td>
+      <td>37.8</td>
+      <td>18.3</td>
+      <td>174.0</td>
+      <td>3400.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Adelie</td>
+      <td>Biscoe</td>
+      <td>35.3</td>
+      <td>18.9</td>
+      <td>187.0</td>
+      <td>3800.0</td>
+      <td>FEMALE</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="열-추출">열 추출</h3>
+<p>열을 추출하는 데에는 다음과 같이 4가지 방법이 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## 특정 열 추출 : 4가지 방법
+</span><span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">species</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'species'</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'species'</span><span class="p">])</span>  <span class="c1">## 모든 index에 대해 species column 출력
+</span><span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1">## 0번째 column인 species 출력
+</span></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0      Adelie
+1      Adelie
+2      Adelie
+3      Adelie
+4      Adelie
+        ...  
+339    Gentoo
+340    Gentoo
+341    Gentoo
+342    Gentoo
+343    Gentoo
+Name: species, Length: 344, dtype: object
+0      Adelie
+1      Adelie
+2      Adelie
+3      Adelie
+4      Adelie
+        ...  
+339    Gentoo
+340    Gentoo
+341    Gentoo
+342    Gentoo
+343    Gentoo
+Name: species, Length: 344, dtype: object
+0      Adelie
+1      Adelie
+2      Adelie
+3      Adelie
+4      Adelie
+        ...  
+339    Gentoo
+340    Gentoo
+341    Gentoo
+342    Gentoo
+343    Gentoo
+Name: species, Length: 344, dtype: object
+0      Adelie
+1      Adelie
+2      Adelie
+3      Adelie
+4      Adelie
+        ...  
+339    Gentoo
+340    Gentoo
+341    Gentoo
+342    Gentoo
+343    Gentoo
+Name: species, Length: 344, dtype: object
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">Series.unique()</code>는 해당 Series의 유니크한 값들(?)을 전부 출력한다.<br />
-출력되는 값에는 nan도 포함되어있다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## 복수의 열 추출 : list 사용
+</span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s">'species'</span><span class="p">,</span> <span class="s">'island'</span><span class="p">,</span> <span class="s">'bill_length_mm'</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">cols</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
 
-<h3 id="seriescount_values">Series.count_values()</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s">'성별'</span><span class="p">].</span><span class="n">value_counts</span><span class="p">()</span>
-<span class="n">남</span>    <span class="mi">2</span>
-<span class="n">여</span>    <span class="mi">1</span>
-<span class="n">Name</span><span class="p">:</span> <span class="n">성별</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">cols</span><span class="p">])</span>
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">Series.count_values()</code>는 각 값들이 해당 Series에 몇 개 존재하는지 알려준다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    species     island  bill_length_mm
+0    Adelie  Torgersen            39.1
+1    Adelie  Torgersen            39.5
+2    Adelie  Torgersen            40.3
+3    Adelie  Torgersen             NaN
+4    Adelie  Torgersen            36.7
+..      ...        ...             ...
+339  Gentoo     Biscoe             NaN
+340  Gentoo     Biscoe            46.8
+341  Gentoo     Biscoe            50.4
+342  Gentoo     Biscoe            45.2
+343  Gentoo     Biscoe            49.9
 
-<p>이외에도 max(), min(), median(), mode(), std() 등도 존재하여 최대, 최소, 중앙값, 최빈값, 표준편차 등을 구하는 것도 가능하다.</p>
+[344 rows x 3 columns]
+    species     island  bill_length_mm
+0    Adelie  Torgersen            39.1
+1    Adelie  Torgersen            39.5
+2    Adelie  Torgersen            40.3
+3    Adelie  Torgersen             NaN
+4    Adelie  Torgersen            36.7
+..      ...        ...             ...
+339  Gentoo     Biscoe             NaN
+340  Gentoo     Biscoe            46.8
+341  Gentoo     Biscoe            50.4
+342  Gentoo     Biscoe            45.2
+343  Gentoo     Biscoe            49.9
+
+[344 rows x 3 columns]
+    species     island  bill_length_mm
+0    Adelie  Torgersen            39.1
+1    Adelie  Torgersen            39.5
+2    Adelie  Torgersen            40.3
+3    Adelie  Torgersen             NaN
+4    Adelie  Torgersen            36.7
+..      ...        ...             ...
+339  Gentoo     Biscoe             NaN
+340  Gentoo     Biscoe            46.8
+341  Gentoo     Biscoe            50.4
+342  Gentoo     Biscoe            45.2
+343  Gentoo     Biscoe            49.9
+
+[344 rows x 3 columns]
+</code></pre></div></div>
+
+<p>위에서 살펴본 열과 행의 추출 방법으로 동시에 추출하는 것이 가능하다.
+이를 위해서는 loc이나 iloc을 사용할 수 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">### 열 및 행 추출
+</span><span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s">'species'</span><span class="p">,</span> <span class="s">'bill_length_mm'</span><span class="p">]</span>
+<span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="n">cols</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>bill_length_mm</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>Adelie</td>
+      <td>39.3</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Adelie</td>
+      <td>37.8</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="데이터-필터링">데이터 필터링</h3>
+
+<p>이 데이터셋에는 3가지 종의 펭귄이 있다. 이 중 아델리펭귄의 데이터만 뽑고싶다면 어떻게 할 수 있을까?
+== 기호를 통해서 펭귄의 종이 아델리인 index를 뽑는 것이 가능하다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## 데이터 필터링
+</span><span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'species'</span><span class="p">]</span><span class="o">==</span><span class="s">'Adelie'</span><span class="p">)</span>  <span class="c1">## species가 Adelie인 index는 True로, 나머지는 False로
+</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0       True
+1       True
+2       True
+3       True
+4       True
+       ...  
+339    False
+340    False
+341    False
+342    False
+343    False
+Name: species, Length: 344, dtype: bool
+</code></pre></div></div>
+
+<p>이렇게 해서 뽑은 index로 DataFrame을 필터링하면 아델리 펭귄만 뽑는 것이 가능하다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s">'species'</span><span class="p">]</span><span class="o">==</span><span class="s">'Adelie'</span><span class="p">]</span> <span class="c1">## species가 Adelie인 index만 출력
+</span></code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>island</th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
+      <th>sex</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.1</td>
+      <td>18.7</td>
+      <td>181.0</td>
+      <td>3750.0</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.5</td>
+      <td>17.4</td>
+      <td>186.0</td>
+      <td>3800.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>40.3</td>
+      <td>18.0</td>
+      <td>195.0</td>
+      <td>3250.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>36.7</td>
+      <td>19.3</td>
+      <td>193.0</td>
+      <td>3450.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>147</th>
+      <td>Adelie</td>
+      <td>Dream</td>
+      <td>36.6</td>
+      <td>18.4</td>
+      <td>184.0</td>
+      <td>3475.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>148</th>
+      <td>Adelie</td>
+      <td>Dream</td>
+      <td>36.0</td>
+      <td>17.8</td>
+      <td>195.0</td>
+      <td>3450.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>149</th>
+      <td>Adelie</td>
+      <td>Dream</td>
+      <td>37.8</td>
+      <td>18.1</td>
+      <td>193.0</td>
+      <td>3750.0</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>150</th>
+      <td>Adelie</td>
+      <td>Dream</td>
+      <td>36.0</td>
+      <td>17.1</td>
+      <td>187.0</td>
+      <td>3700.0</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>151</th>
+      <td>Adelie</td>
+      <td>Dream</td>
+      <td>41.5</td>
+      <td>18.5</td>
+      <td>201.0</td>
+      <td>4000.0</td>
+      <td>MALE</td>
+    </tr>
+  </tbody>
+</table>
+<p>152 rows × 7 columns</p>
+</div>
+
+<p>마찬가지로 아델리 펭귄의 부리에 관한 데이터만 보고 싶다면 다음과 같이 적을 수 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## species가 Adelie인 데이터의 bill_length_mm와 bill_depth_mm 값만 출력
+</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s">'species'</span><span class="p">]</span><span class="o">==</span><span class="s">'Adelie'</span><span class="p">,</span> <span class="p">[</span><span class="s">'bill_length_mm'</span><span class="p">,</span> <span class="s">'bill_depth_mm'</span><span class="p">]]</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>39.1</td>
+      <td>18.7</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>39.5</td>
+      <td>17.4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>40.3</td>
+      <td>18.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>36.7</td>
+      <td>19.3</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>147</th>
+      <td>36.6</td>
+      <td>18.4</td>
+    </tr>
+    <tr>
+      <th>148</th>
+      <td>36.0</td>
+      <td>17.8</td>
+    </tr>
+    <tr>
+      <th>149</th>
+      <td>37.8</td>
+      <td>18.1</td>
+    </tr>
+    <tr>
+      <th>150</th>
+      <td>36.0</td>
+      <td>17.1</td>
+    </tr>
+    <tr>
+      <th>151</th>
+      <td>41.5</td>
+      <td>18.5</td>
+    </tr>
+  </tbody>
+</table>
+<p>152 rows × 2 columns</p>
+</div>
+
+<p><br /></p>
+
+<h2 id="결측값-매꾸기">결측값 매꾸기</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 각 값이 NaN인지 확인
+</span><span class="n">df</span><span class="p">.</span><span class="n">isna</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>island</th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
+      <th>sex</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>339</th>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>340</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>341</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>342</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>343</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+<p>344 rows × 7 columns</p>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 각 열 별로 NaN값이 존재하는지 확인
+</span><span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">any</span><span class="p">())</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>species              False
+island               False
+bill_length_mm        True
+bill_depth_mm         True
+flipper_length_mm     True
+body_mass_g           True
+sex                   True
+dtype: bool
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 각 행 별로 NaN값이 존재하는지 확인
+</span><span class="n">df</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0      False
+1      False
+2      False
+3       True
+4      False
+       ...  
+339     True
+340    False
+341    False
+342    False
+343    False
+Length: 344, dtype: bool
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## NaN값이 존재하는 행만 출력
+</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">isna</span><span class="p">().</span><span class="nb">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>island</th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
+      <th>sex</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>34.1</td>
+      <td>18.1</td>
+      <td>193.0</td>
+      <td>3475.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>42.0</td>
+      <td>20.2</td>
+      <td>190.0</td>
+      <td>4250.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>37.8</td>
+      <td>17.1</td>
+      <td>186.0</td>
+      <td>3300.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>37.8</td>
+      <td>17.3</td>
+      <td>180.0</td>
+      <td>3700.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>Adelie</td>
+      <td>Dream</td>
+      <td>37.5</td>
+      <td>18.9</td>
+      <td>179.0</td>
+      <td>2975.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>246</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>44.5</td>
+      <td>14.3</td>
+      <td>216.0</td>
+      <td>4100.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>286</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>46.2</td>
+      <td>14.4</td>
+      <td>214.0</td>
+      <td>4650.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>324</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>47.3</td>
+      <td>13.8</td>
+      <td>216.0</td>
+      <td>4725.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>336</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>44.5</td>
+      <td>15.7</td>
+      <td>217.0</td>
+      <td>4875.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>339</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## NaN값 채우기 : fillna
+</span><span class="n">df2</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">df2</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>species</th>
+      <th>island</th>
+      <th>bill_length_mm</th>
+      <th>bill_depth_mm</th>
+      <th>flipper_length_mm</th>
+      <th>body_mass_g</th>
+      <th>sex</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.10000</td>
+      <td>18.70000</td>
+      <td>181.000000</td>
+      <td>3750.000000</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>39.50000</td>
+      <td>17.40000</td>
+      <td>186.000000</td>
+      <td>3800.000000</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>40.30000</td>
+      <td>18.00000</td>
+      <td>195.000000</td>
+      <td>3250.000000</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>43.92193</td>
+      <td>17.15117</td>
+      <td>200.915205</td>
+      <td>4201.754386</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Adelie</td>
+      <td>Torgersen</td>
+      <td>36.70000</td>
+      <td>19.30000</td>
+      <td>193.000000</td>
+      <td>3450.000000</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>339</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>43.92193</td>
+      <td>17.15117</td>
+      <td>200.915205</td>
+      <td>4201.754386</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>340</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>46.80000</td>
+      <td>14.30000</td>
+      <td>215.000000</td>
+      <td>4850.000000</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>341</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>50.40000</td>
+      <td>15.70000</td>
+      <td>222.000000</td>
+      <td>5750.000000</td>
+      <td>MALE</td>
+    </tr>
+    <tr>
+      <th>342</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>45.20000</td>
+      <td>14.80000</td>
+      <td>212.000000</td>
+      <td>5200.000000</td>
+      <td>FEMALE</td>
+    </tr>
+    <tr>
+      <th>343</th>
+      <td>Gentoo</td>
+      <td>Biscoe</td>
+      <td>49.90000</td>
+      <td>16.10000</td>
+      <td>213.000000</td>
+      <td>5400.000000</td>
+      <td>MALE</td>
+    </tr>
+  </tbody>
+</table>
+<p>344 rows × 7 columns</p>
+</div>
+
 
         
       </section>
@@ -910,22 +2093,22 @@ memory usage: 248.0+ bytes
     <h4 class="page__share-title">Share on</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=Pandas%EB%A5%BC+%EC%9D%B4%EC%9A%A9%ED%95%9C+%EB%8D%B0%EC%9D%B4%ED%84%B0+%EB%B6%84%EC%84%9D%281%29%20http%3A%2F%2Flocalhost%3A4000%2Fmarine%2520data%2520analysis%2Fpandas_1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=Pandas%EB%A5%BC+%EC%9D%B4%EC%9A%A9%ED%95%9C+%EB%8D%B0%EC%9D%B4%ED%84%B0+%EB%B6%84%EC%84%9D%281%29%20http%3A%2F%2F0.0.0.0%3A4000%2Fmarine%2520data%2520analysis%2Fpandas_1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fmarine%2520data%2520analysis%2Fpandas_1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F0.0.0.0%3A4000%2Fmarine%2520data%2520analysis%2Fpandas_1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fmarine%2520data%2520analysis%2Fpandas_1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A4000%2Fmarine%2520data%2520analysis%2Fpandas_1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="/etcjekyll_debug/" class="pagination--pager" title="`load’: marshal data too short (ArgumentError) 문제 해결
+      <a href="/debugging/cv2_debug/" class="pagination--pager" title="[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’
 ">Previous</a>
     
     
-      <a href="/pandas_2/" class="pagination--pager" title="Pandas_2
+      <a href="/etcdask_tips/" class="pagination--pager" title="Dask 사용 팁
 ">Next</a>
     
   </nav>
@@ -950,97 +2133,7 @@ memory usage: 248.0+ bytes
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/pandas_2/" rel="permalink">Pandas_2
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          less than 1 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">&lt;!– —
-title:  “Pandas를 이용한 데이터 분석(2)”
-layout: single
-categories:
-
-  Marine Data Analysis
-last_modified_at: 2020-09-07T09:06:00
-classes: wide
-tags:
-  Pytho...</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/etcjekyll_debug/" rel="permalink">`load’: marshal data too short (ArgumentError) 문제 해결
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          1 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">열심히 블로그 공사하다가 서버를 껐다 켰더니 이런 에러가 뜬다
-&gt; jekyll serve
-                    ------------------------------------------------
-      Jekyll 4.1.1   Please append ...</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/marine%20data%20analysis/boxplot/" rel="permalink">Boxplot에 대해 알아보자
+        <a href="/paperreview/EfficientNet/" rel="permalink">EfficientNet 논문 리뷰
 </a>
       
     </h2>
@@ -1065,7 +2158,8 @@ tags:
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">Boxplot이란 다음과 같은 그래프를 말한다.
+    <p class="archive__item-excerpt" itemprop="description">EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper]
+저자 : Mingxing Tan, Quoc V. Le
 </p>
   </article>
 </div>
@@ -1080,7 +2174,7 @@ tags:
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/etcbooks_to_read/" rel="permalink">괜찮은 무료 웹북들
+        <a href="/debugging/tf_memory_leak/" rel="permalink">텐서플로우 학습 시 메모리 누수 발생
 </a>
       
     </h2>
@@ -1105,14 +2199,93 @@ tags:
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">무료 웹북 목록
+    <p class="archive__item-excerpt" itemprop="description">요약
+쓰레기 수집을 Callback으로 넣어서 Epoch가 끝날 때마다 실행시켜주자
+</p>
+  </article>
+</div>
 
-  Network Science by Albert-László Barabási
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
-      물리학과 선배가 추천해주신 책. 그래프 데이터 처리할 때 도움이 될 듯 하여 받아왔다
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/etcdask_tips/" rel="permalink">Dask 사용 팁
+</a>
+      
+    </h2>
     
-  
-  The Analysis of Data by Guy Lebano...</p>
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">1. Multiprocessing을 디폴트로
+import dask
+dask.config.set(pool=Pool(12))
+dask.config.set(scheduler='processes')
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/debugging/cv2_debug/" rel="permalink">[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">해안선 추출 작업 중에 제일 마지막 단계인 Edge Detection에서 자꾸 이런 에러가 뜬다.
+</p>
   </article>
 </div>
 
@@ -1158,7 +2331,7 @@ tags:
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2020 Chase Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2021 Chase Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

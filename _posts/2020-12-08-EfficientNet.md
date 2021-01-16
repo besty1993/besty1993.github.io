@@ -11,6 +11,7 @@ tags:
   - PaperReview
   - NAS
   - NetworkScaling
+use_math: true
 ---
 
 EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [[paper]](https://arxiv.org/pdf/1905.11946.pdf)\
@@ -32,6 +33,7 @@ EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [[pape
 
 <p align="center">
   <img src="/assets/images/EfficientNet/EfficientNetSample.PNG">
+</p>
 
 # Compound Scaling Method
 ## Problem Formulation
@@ -41,9 +43,11 @@ EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [[pape
   - $X_i$ is a tensor with shape of $(H_i, W_i, C_i)$, where $H_i, W_i, C_i$ is height, width, channel of the tensor, respectively
 
 - A list of ConvNet layers is represented as 
+
 $$\mathcal{F_k}\odot ... \odot \mathcal{F_2} \odot \mathcal{F_1} = \bigodot _{j=1,...,k}\mathcal{F_j}(X_1)$$
 
 - Let's consider a list of ConvNet layers as *block*, then ConvNet $N$ can be defined as
+
 $$\mathcal{N}=\bigodot _{i=1,...,s}\mathcal{F_i}^{L_i}(X_{<H_i,W_i,C_i>})$$
 
   - where $\mathcal{F_i}^{L_i}$ is $\mathcal{F_i}$ repeated $L_i$ times in stage $i$
@@ -53,9 +57,9 @@ $$\mathcal{N}=\bigodot _{i=1,...,s}\mathcal{F_i}^{L_i}(X_{<H_i,W_i,C_i>})$$
   - No architecture($\mathcal{F_i}$) changing
   - All layers must be scaled uniformly with constant ratio
 
-$$ max_{d,w,r} Accuracy(\mathcal{N}(d,w,r))$$
+$$max_{d,w,r} Accuracy(\mathcal{N}(d,w,r))$$
 
-$$ s.t.\quad \quad   \mathcal{N}(d,w,r) = \bigodot _{i=1,...,s}\hat \mathcal{F_i}^{d \cdot \hat L_i}(X_{<r\cdot \hat H_i,r\cdot \hat W_i,w\cdot \hat C_i>})$$
+$$ s.t.\quad \quad   \mathcal{N}(d,w,r) = \bigodot _{i=1,...,s}\hat {\mathcal{F_i}}^{d \cdot \hat L_i}(X_{<r\cdot \hat H_i,r\cdot \hat W_i,w\cdot \hat C_i>})$$
 
 $$\mathsf{Memory}(\mathcal{N}) \le \mathsf{TargetMemory} \quad \quad$$
 
@@ -69,6 +73,7 @@ $$\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad \$$
 
 <p align="center">
   <img src="/assets/images/EfficientNet/OneDimensionScale.PNG">
+</p>
 
 - Scaling up any dimension of network improves accuracy, but **the accuracy gain diminishes for bigger models**
 
@@ -78,6 +83,7 @@ $$\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad \$$
 
 <p align="center">
   <img src="/assets/images/EfficientNet/CompoundScaling.PNG">
+</p>
 
 - For better accuracy and efficiency, it is critical to **balance the network width, depth, and resolution**
 
@@ -85,6 +91,7 @@ $$\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad \$$
 
 <p align="center">
   <img src="/assets/images/EfficientNet/CSM.PNG">
+</p>
 
 - $\alpha, \beta, \gamma$ : constants to adjust the network depth, width, image resolution, respectively. These components are determined by a small grid search
 - $\phi$ : variable to decide how many resources to use for model scaling

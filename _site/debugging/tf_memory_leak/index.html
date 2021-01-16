@@ -1,0 +1,719 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.1 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>텐서플로우 학습 시 메모리 누수 발생 - Random Dev Blog</title>
+<meta name="description" content="요약 쓰레기 수집을 Callback으로 넣어서 Epoch가 끝날 때마다 실행시켜주자">
+
+
+  <meta name="author" content="Chase Yang">
+  
+  <meta property="article:author" content="Chase Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Random Dev Blog">
+<meta property="og:title" content="텐서플로우 학습 시 메모리 누수 발생">
+<meta property="og:url" content="http://0.0.0.0:4000/debugging/tf_memory_leak/">
+
+
+  <meta property="og:description" content="요약 쓰레기 수집을 Callback으로 넣어서 Epoch가 끝날 때마다 실행시켜주자">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-11-13T00:00:00-06:00">
+
+
+
+  <meta property="article:modified_time" content="2020-11-17T00:00:00-06:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://0.0.0.0:4000/debugging/tf_memory_leak/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Chase Yang",
+      "url": "http://0.0.0.0:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Random Dev Blog Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+    <!--
+    <!-- Begin section for dataframe table formatting (https://chukycheese.github.io/translation/github/jupyter%20notebook/post-jupyter-notebooks-to-your-github-blog/)-->
+    <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <!-- End section for dataframe table formatting -->
+    -->
+  
+    
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Random Dev Blog
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/yearly/">Posts by Year</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/profile.jpg" alt="Chase Yang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Chase Yang</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>우린 부자가 될꺼야!</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Republic of Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://besty1993.github.io" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/besty1993" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:yang8571@gmail.com">
+            <meta itemprop="email" content="yang8571@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="텐서플로우 학습 시 메모리 누수 발생">
+    <meta itemprop="description" content="요약쓰레기 수집을 Callback으로 넣어서 Epoch가 끝날 때마다 실행시켜주자">
+    <meta itemprop="datePublished" content="2020-11-13T00:00:00-06:00">
+    <meta itemprop="dateModified" content="2020-11-17T00:00:00-06:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">텐서플로우 학습 시 메모리 누수 발생
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="요약">요약</h2>
+<p>쓰레기 수집을 Callback으로 넣어서 Epoch가 끝날 때마다 실행시켜주자</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## 예시
+</span><span class="k">class</span> <span class="nc">GarbageCollector</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">callbacks</span><span class="p">.</span><span class="n">Callback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">gc</span><span class="p">.</span><span class="n">collect</span><span class="p">()</span>
+        <span class="k">return</span>
+
+<span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="n">val_dataset</span><span class="p">,</span>
+	<span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="n">GarbageCollector</span><span class="p">()],</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="내용">내용</h2>
+
+<p>텐서플로우의 <code class="language-plaintext highlighter-rouge">data.Dataset.from_generator</code>는 대용량의 데이터을 쉽게 학습시킬 수 있다는 장점이 있지만
+왜인지 메모리 누수가 발생하기도 한다. 내 생각에는 GIL의 영향을 받아서 그러는 거 같은데 어디까지나 내 추측일 뿐이고</p>
+
+<p>어쨌든, 이 메모리 누수는 특히 <code class="language-plaintext highlighter-rouge">tf.image.random_flip_left_right</code>이나 <code class="language-plaintext highlighter-rouge">tf.random.uniform</code>과 같이 데이터 증강이나 랜덤 변수 사용 시 더 크게 발생하는 듯 하다.</p>
+
+<p>이 문제를 해결을 못 해서 한 동안 코드를 전부 PyTorch로 갈아엎을까 고민했었는데, 
+PM에게 코드를 갈아엎겠다고 차마 말 할 수가 없어서 관두었다.</p>
+
+<p>&lt;/br&gt;</p>
+
+<p>Tensorflow KR에도 이 문제에 대해 물어봤는데 한 분께서 다음의 코드로 해결을 했다고 한다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">echo 1 &gt; /proc/sys/vm/drop_caches</code></p>
+
+<blockquote>
+  <p>만약 권한이 없다면서 안 되는 분들은 <a href="http://egloos.zum.com/studyfoss/v/5204344">http://egloos.zum.com/studyfoss/v/5204344</a> 여기를 참고하면 된다.</p>
+</blockquote>
+
+<p>검색해보니 pagecache를 해제하는 명령어라고 한다. 이걸 crontab으로 5분마다 돌리셨다는데…</p>
+
+<p>문제는 이게 Docker 컨테이너 속 캐시까지 해제해주진 않는다! Docker 컨테이너 속에서는 저 <code class="language-plaintext highlighter-rouge">/proc/sys/vm/drop_caches</code>가 읽기 전용이라며 안 된다.
+(이걸 또 검색해보니 Docker 컨테이너에선 원래 안 된다고 한다)</p>
+
+<p>&lt;/br&gt;</p>
+
+<p>그래도 여기에서 캐시를 지우면 된다는 힌트를 얻어서 gc.collect()를 매 epoch마다 실행해주면 어떨까? 해서 해보니…</p>
+
+<p>된다. lol</p>
+
+<p>그냥 위에 적은 것 처럼 tf.keras.callbacks.Callback을 상속받아 커스텀 콜백을 하나 만들면 된다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#debugging" class="page__taxonomy-item" rel="tag">Debugging</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#tensorflow" class="page__taxonomy-item" rel="tag">Tensorflow</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#debugging" class="page__taxonomy-item" rel="tag">Debugging</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-11-17">November 17, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%ED%85%90%EC%84%9C%ED%94%8C%EB%A1%9C%EC%9A%B0+%ED%95%99%EC%8A%B5+%EC%8B%9C+%EB%A9%94%EB%AA%A8%EB%A6%AC+%EB%88%84%EC%88%98+%EB%B0%9C%EC%83%9D%20http%3A%2F%2F0.0.0.0%3A4000%2Fdebugging%2Ftf_memory_leak%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F0.0.0.0%3A4000%2Fdebugging%2Ftf_memory_leak%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A4000%2Fdebugging%2Ftf_memory_leak%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/etcdask_tips/" class="pagination--pager" title="Dask 사용 팁
+">Previous</a>
+    
+    
+      <a href="/paperreview/EfficientNet/" class="pagination--pager" title="EfficientNet 논문 리뷰
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/paperreview/EfficientNet/" rel="permalink">EfficientNet 논문 리뷰
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper]
+저자 : Mingxing Tan, Quoc V. Le
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/etcdask_tips/" rel="permalink">Dask 사용 팁
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">1. Multiprocessing을 디폴트로
+import dask
+dask.config.set(pool=Pool(12))
+dask.config.set(scheduler='processes')
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/marine%20data%20analysis/pandas_1/" rel="permalink">Pandas를 이용한 데이터 분석(1)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          10 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Pandas란 무엇인가?
+
+  pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/debugging/cv2_debug/" rel="permalink">[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">해안선 추출 작업 중에 제일 마지막 단계인 Edge Detection에서 자꾸 이런 에러가 뜬다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Chase Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

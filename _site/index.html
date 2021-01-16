@@ -21,7 +21,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Random Dev Blog">
 <meta property="og:title" content="Random Dev Blog">
-<meta property="og:url" content="http://localhost:4000/">
+<meta property="og:url" content="http://0.0.0.0:4000/">
 
 
   <meta property="og:description" content="Random Blog Posting Random Things">
@@ -41,11 +41,11 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/">
+<link rel="canonical" href="http://0.0.0.0:4000/">
 
 
 
-  <link rel="next" href="http://localhost:4000/page2/">
+  <link rel="next" href="http://0.0.0.0:4000/page2/">
 
 
 <script type="application/ld+json">
@@ -54,7 +54,7 @@
     
       "@type": "Person",
       "name": "Chase Yang",
-      "url": "http://localhost:4000/"
+      "url": "http://0.0.0.0:4000/"
     
   }
 </script>
@@ -103,6 +103,34 @@
 
 <!-- end custom head snippets -->
 
+    <!--
+    <!-- Begin section for dataframe table formatting (https://chukycheese.github.io/translation/github/jupyter%20notebook/post-jupyter-notebooks-to-your-github-blog/)-->
+    <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <!-- End section for dataframe table formatting -->
+    -->
+  
+    
   </head>
 
   <body class="layout--home">
@@ -304,7 +332,48 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/pandas_2/" rel="permalink">Pandas_2
+        <a href="/paperreview/EfficientNet/" rel="permalink">EfficientNet 논문 리뷰
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper]
+저자 : Mingxing Tan, Quoc V. Le
+</p>
+  </article>
+</div>
+
+  
+    
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/debugging/tf_memory_leak/" rel="permalink">텐서플로우 학습 시 메모리 누수 발생
 </a>
       
     </h2>
@@ -329,16 +398,53 @@
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">&lt;!– —
-title:  “Pandas를 이용한 데이터 분석(2)”
-layout: single
-categories:
+    <p class="archive__item-excerpt" itemprop="description">요약
+쓰레기 수집을 Callback으로 넣어서 Epoch가 끝날 때마다 실행시켜주자
+</p>
+  </article>
+</div>
 
-  Marine Data Analysis
-last_modified_at: 2020-09-07T09:06:00
-classes: wide
-tags:
-  Pytho...</p>
+  
+    
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/etcdask_tips/" rel="permalink">Dask 사용 팁
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">1. Multiprocessing을 디폴트로
+import dask
+dask.config.set(pool=Pool(12))
+dask.config.set(scheduler='processes')
+
+</p>
   </article>
 </div>
 
@@ -370,7 +476,7 @@ tags:
       <span class="page__meta-readtime">
         <i class="far fa-clock" aria-hidden="true"></i>
         
-          4 minute read
+          10 minute read
         
       </span>
     
@@ -393,7 +499,7 @@ tags:
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/etcjekyll_debug/" rel="permalink">`load’: marshal data too short (ArgumentError) 문제 해결
+        <a href="/debugging/cv2_debug/" rel="permalink">[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’
 </a>
       
     </h2>
@@ -418,96 +524,8 @@ tags:
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">열심히 블로그 공사하다가 서버를 껐다 켰더니 이런 에러가 뜬다
-&gt; jekyll serve
-                    ------------------------------------------------
-      Jekyll 4.1.1   Please append ...</p>
-  </article>
-</div>
-
-  
-    
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/marine%20data%20analysis/boxplot/" rel="permalink">Boxplot에 대해 알아보자
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          2 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Boxplot이란 다음과 같은 그래프를 말한다.
+    <p class="archive__item-excerpt" itemprop="description">해안선 추출 작업 중에 제일 마지막 단계인 Edge Detection에서 자꾸 이런 에러가 뜬다.
 </p>
-  </article>
-</div>
-
-  
-    
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/etcbooks_to_read/" rel="permalink">괜찮은 무료 웹북들
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          less than 1 minute read
-        
-      </span>
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">무료 웹북 목록
-
-  Network Science by Albert-László Barabási
-    
-      물리학과 선배가 추천해주신 책. 그래프 데이터 처리할 때 도움이 될 듯 하여 받아왔다
-    
-  
-  The Analysis of Data by Guy Lebano...</p>
   </article>
 </div>
 
@@ -536,12 +554,19 @@ tags:
     
 
     
+      
+        
+        
+        
+        <li><a href="/page2/">2</a></li>
+      
+    
 
     
     
 
     
-      <li><a href="/page2/">2</a></li>
+      <li><a href="/page3/">3</a></li>
     
 
     
@@ -590,7 +615,7 @@ tags:
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2020 Chase Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2021 Chase Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

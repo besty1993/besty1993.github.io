@@ -1,0 +1,23 @@
+I"�<h1 id="1-multiprocessing을-디폴트로">1. Multiprocessing을 디폴트로</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import dask
+dask.config.set(pool=Pool(12))
+dask.config.set(scheduler='processes')
+</code></pre></div></div>
+
+<p>&lt;/br&gt;</p>
+
+<h1 id="2-dask-dataframe에서-값-변경하기">2. Dask DataFrame에서 값 변경하기</h1>
+
+<p>Pandas처럼 df.loc을 사용하면 다음과 같은 에러 발생</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'_LocIndexer' object does not support item assignment
+</code></pre></div></div>
+
+<p>이 때는 dask의 mask 메소드를 사용할 수 있다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wave_ddf.mask((wave_ddf.height&lt;0)|(wave_ddf.period&lt;0),0)
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">ddf.mask(필터, 변경할 값)</code>의 식으로 넣으면 된다. <code class="language-plaintext highlighter-rouge">np.where</code>와 비슷하면서도 다름.
+(DataFrame뿐만 아니라 Series에서도 사용 가능)</p>
+:ET

@@ -1,0 +1,838 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.1 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>EfficientNet 논문 리뷰 - Random Dev Blog</title>
+<meta name="description" content="EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper] 저자 : Mingxing Tan, Quoc V. Le">
+
+
+  <meta name="author" content="Chase Yang">
+  
+  <meta property="article:author" content="Chase Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Random Dev Blog">
+<meta property="og:title" content="EfficientNet 논문 리뷰">
+<meta property="og:url" content="http://0.0.0.0:4000/paperreview/EfficientNet/">
+
+
+  <meta property="og:description" content="EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper] 저자 : Mingxing Tan, Quoc V. Le">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-08T00:00:00-06:00">
+
+
+
+  <meta property="article:modified_time" content="2020-12-08T00:00:00-06:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://0.0.0.0:4000/paperreview/EfficientNet/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Chase Yang",
+      "url": "http://0.0.0.0:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Random Dev Blog Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+    <!--
+    <!-- Begin section for dataframe table formatting (https://chukycheese.github.io/translation/github/jupyter%20notebook/post-jupyter-notebooks-to-your-github-blog/)-->
+    <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <!-- End section for dataframe table formatting -->
+    -->
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        TeX: {
+          equationNumbers: {
+            autoNumber: "AMS"
+          }
+        },
+        tex2jax: {
+        inlineMath: [ ['$', '$'] ],
+        displayMath: [ ['$$', '$$'] ],
+        processEscapes: true,
+      }
+    });
+    MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+</script>
+<script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+    
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Random Dev Blog
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/yearly/">Posts by Year</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/profile.jpg" alt="Chase Yang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Chase Yang</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>우린 부자가 될꺼야!</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Republic of Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://besty1993.github.io" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/besty1993" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:yang8571@gmail.com">
+            <meta itemprop="email" content="yang8571@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="EfficientNet 논문 리뷰">
+    <meta itemprop="description" content="EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper]저자 : Mingxing Tan, Quoc V. Le">
+    <meta itemprop="datePublished" content="2020-12-08T00:00:00-06:00">
+    <meta itemprop="dateModified" content="2020-12-08T00:00:00-06:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">EfficientNet 논문 리뷰
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks <a href="https://arxiv.org/pdf/1905.11946.pdf">[paper]</a><br />
+저자 : Mingxing Tan, Quoc V. Le</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Help:Displaying_a_formula#Formatting_using_TeX">[latex_mathmatics]</a></p>
+
+<h1 id="summary">Summary</h1>
+<ul>
+  <li>Proposed ‘Compound Scaling Method’, which can scale ConvNet by efficiently balancing network Depth, Width, Image Resolution</li>
+  <li>Proposed ‘EfficientNet’, which achieved SOTA accuracy with much more efficient model size and complexity</li>
+</ul>
+
+<h1 id="problems-to-solve">Problems to solve</h1>
+<ul>
+  <li>In previous work, it was common to scale only one of the three dimensions : depth, width, and image resolution
+    <blockquote>
+      <ul>
+        <li>Depth : The number of ConvNet layers</li>
+        <li>Width : The number of channels of each ConvNet layer</li>
+        <li>Image Resolution : Input image size(Height*Width)</li>
+      </ul>
+    </blockquote>
+  </li>
+  <li>Is there a principled method to scale up ConvNets that can achieve better accuracy and efficiency?</li>
+</ul>
+
+<p align="center">
+  <img src="/assets/images/EfficientNet/EfficientNetSample.PNG" />
+</p>
+
+<h1 id="compound-scaling-method">Compound Scaling Method</h1>
+<h2 id="problem-formulation">Problem Formulation</h2>
+
+<ul>
+  <li>Define ConvNet Layer $i$ as $Y_i = \mathcal{F_i}(X_i)$
+    <ul>
+      <li>where $Y_i$ : Output Tensor, $\mathcal{F_i}$ : Operator, $X_i$ : Input Tensor</li>
+      <li>$X_i$ is a tensor with shape of $(H_i, W_i, C_i)$, where $H_i, W_i, C_i$ is height, width, channel of the tensor, respectively</li>
+    </ul>
+  </li>
+  <li>A list of ConvNet layers is represented as </li>
+</ul>
+
+\[\mathcal{F_k}\odot ... \odot \mathcal{F_2} \odot \mathcal{F_1} = \bigodot _{j=1,...,k}\mathcal{F_j}(X_1)\]
+
+<ul>
+  <li>Let’s consider a list of ConvNet layers as <em>block</em>, then ConvNet $N$ can be defined as</li>
+</ul>
+
+\[\mathcal{N}=\bigodot _{i=1,...,s}\mathcal{F_i}^{L_i}(X_{&lt;H_i,W_i,C_i&gt;})\]
+
+<ul>
+  <li>
+    <p>where $\mathcal{F_i}^{L_i}$ is $\mathcal{F_i}$ repeated $L_i$ times in stage $i$</p>
+  </li>
+  <li>Then, the target is <strong>to maximize the model accuracy for any given resource constraint</strong></li>
+  <li>In order to reduce the search space…
+    <ul>
+      <li>No architecture($\mathcal{F_i}$) changing</li>
+      <li>All layers must be scaled uniformly with constant ratio</li>
+    </ul>
+  </li>
+</ul>
+
+\[max_{d,w,r} Accuracy(\mathcal{N}(d,w,r))\]
+
+\[s.t.\quad \quad   \mathcal{N}(d,w,r) = \bigodot _{i=1,...,s}\hat {\mathcal{F_i}}^{d \cdot \hat L_i}(X_{&lt;r\cdot \hat H_i,r\cdot \hat W_i,w\cdot \hat C_i&gt;})\]
+
+\[\mathsf{Memory}(\mathcal{N}) \le \mathsf{TargetMemory} \quad \quad\]
+
+\[\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad \\]
+
+<h2 id="scaling-dimensions">Scaling Dimensions</h2>
+
+<ul>
+  <li>Deeper : Captures richer and more complex features</li>
+  <li>Wider : Captures more fine-grained features and easier to train</li>
+  <li>Higher Resolution : Captures more fine-grained patterns</li>
+</ul>
+
+<p align="center">
+  <img src="/assets/images/EfficientNet/OneDimensionScale.PNG" />
+</p>
+
+<ul>
+  <li>Scaling up any dimension of network improves accuracy, but <strong>the accuracy gain diminishes for bigger models</strong></li>
+</ul>
+
+<h2 id="compound-scaling">Compound Scaling</h2>
+<ul>
+  <li>Intuitively, higher resolution images deeper and wider network</li>
+  <li>To validate this intuition, they scaled network width w by fixing d and r</li>
+</ul>
+
+<p align="center">
+  <img src="/assets/images/EfficientNet/CompoundScaling.PNG" />
+</p>
+
+<ul>
+  <li>For better accuracy and efficiency, it is critical to <strong>balance the network width, depth, and resolution</strong></li>
+</ul>
+
+<h2 id="compound-scaling-method-1">Compound Scaling Method</h2>
+
+<p align="center">
+  <img src="/assets/images/EfficientNet/CSM.PNG" />
+</p>
+
+<ul>
+  <li>$\alpha, \beta, \gamma$ : constants to adjust the network depth, width, image resolution, respectively. These components are determined by a small grid search</li>
+  <li>$\phi$ : variable to decide how many resources to use for model scaling</li>
+  <li>FLOPS of ConvNet $\propto d, w^2, r^2 $</li>
+  <li>FLOPS of ConvNet $\propto (\alpha \cdot \beta^2 \cdot \gamma^2 )^\phi$</li>
+  <li>Set $\alpha \cdot \beta^2 \cdot \gamma^2 \approx 2$, so that the total FLOPS will increas approximately by $2^\phi$</li>
+  <li>Once $\alpha, \beta, \gamma$ are decided, the model scaling can be easily done only by adjusting $\phi$</li>
+</ul>
+
+<h2 id="efficientnet-architecture">EfficientNet Architecture</h2>
+<ul>
+  <li><strong>Compound Scaling Method</strong> does not change layer operators $\hat \mathcal{F_i}$ in baseline network but having a good baseline network is also critical</li>
+  <li>By NAS(Neural Architecture Search) to optimize accuracy and FLOPS, an accurate and efficient baseline is proposed</li>
+  <li>Optimization goal : $ACC(m) \times [FLOPS(m)/T]^w$
+    <ul>
+      <li>$ACC(m)$ : Accuracy of model $m$</li>
+      <li>$FLOPS(m)$ : FLOPS of model $m$</li>
+      <li>$T$ : Target FLOPS (Here, $T$ = 400 million)</li>
+      <li>$w$ : hyperparameter for trade-off (Here, $w=-0.07$)</li>
+    </ul>
+  </li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#deeplearning" class="page__taxonomy-item" rel="tag">DeepLearning</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#imageclassification" class="page__taxonomy-item" rel="tag">ImageClassification</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#nas" class="page__taxonomy-item" rel="tag">NAS</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#networkscaling" class="page__taxonomy-item" rel="tag">NetworkScaling</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#paperreview" class="page__taxonomy-item" rel="tag">PaperReview</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#paperreview" class="page__taxonomy-item" rel="tag">PaperReview</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-08">December 8, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=EfficientNet+%EB%85%BC%EB%AC%B8+%EB%A6%AC%EB%B7%B0%20http%3A%2F%2F0.0.0.0%3A4000%2Fpaperreview%2FEfficientNet%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F0.0.0.0%3A4000%2Fpaperreview%2FEfficientNet%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A4000%2Fpaperreview%2FEfficientNet%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/debugging/tf_memory_leak/" class="pagination--pager" title="텐서플로우 학습 시 메모리 누수 발생
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/debugging/tf_memory_leak/" rel="permalink">텐서플로우 학습 시 메모리 누수 발생
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">요약
+쓰레기 수집을 Callback으로 넣어서 Epoch가 끝날 때마다 실행시켜주자
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/etcdask_tips/" rel="permalink">Dask 사용 팁
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">1. Multiprocessing을 디폴트로
+import dask
+dask.config.set(pool=Pool(12))
+dask.config.set(scheduler='processes')
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/marine%20data%20analysis/pandas_1/" rel="permalink">Pandas를 이용한 데이터 분석(1)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          10 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Pandas란 무엇인가?
+
+  pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/debugging/cv2_debug/" rel="permalink">[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">해안선 추출 작업 중에 제일 마지막 단계인 Edge Detection에서 자꾸 이런 에러가 뜬다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Chase Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,719 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.1 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’ - Random Dev Blog</title>
+<meta name="description" content="해안선 추출 작업 중에 제일 마지막 단계인 Edge Detection에서 자꾸 이런 에러가 뜬다.">
+
+
+  <meta name="author" content="Chase Yang">
+  
+  <meta property="article:author" content="Chase Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Random Dev Blog">
+<meta property="og:title" content="[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’">
+<meta property="og:url" content="http://0.0.0.0:4000/debugging/cv2_debug/">
+
+
+  <meta property="og:description" content="해안선 추출 작업 중에 제일 마지막 단계인 Edge Detection에서 자꾸 이런 에러가 뜬다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-09-27T00:00:00-05:00">
+
+
+
+  <meta property="article:modified_time" content="2020-09-27T14:00:00-05:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://0.0.0.0:4000/debugging/cv2_debug/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Chase Yang",
+      "url": "http://0.0.0.0:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Random Dev Blog Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+    <!--
+    <!-- Begin section for dataframe table formatting (https://chukycheese.github.io/translation/github/jupyter%20notebook/post-jupyter-notebooks-to-your-github-blog/)-->
+    <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <!-- End section for dataframe table formatting -->
+    -->
+  
+    
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Random Dev Blog
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/yearly/">Posts by Year</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/profile.jpg" alt="Chase Yang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Chase Yang</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>우린 부자가 될꺼야!</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Republic of Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://besty1993.github.io" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Website</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/besty1993" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:yang8571@gmail.com">
+            <meta itemprop="email" content="yang8571@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’">
+    <meta itemprop="description" content="해안선 추출 작업 중에 제일 마지막 단계인 Edge Detection에서 자꾸 이런 에러가 뜬다.">
+    <meta itemprop="datePublished" content="2020-09-27T00:00:00-05:00">
+    <meta itemprop="dateModified" content="2020-09-27T14:00:00-05:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[Open CV] Expected Ptr&lt;cv::UMat&gt; for argument ‘src’
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>해안선 추출 작업 중에 제일 마지막 단계인 <strong>Edge Detection</strong>에서 자꾸 이런 에러가 뜬다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+&lt;timed exec&gt; in &lt;module&gt;
+
+&lt;ipython-input-16-d58dd581f2d3&gt; in Pipeline(tiff_path)
+     43 #     laplacian[laplacian==0] = np.nan
+     44 
+---&gt; 45     sobel = cv2.Sobel(img, cv2.CV_8U, 1, 1, 3).astype('float')
+     46 #     sobel[sobel==0] = np.nan
+     47 
+
+TypeError: Expected Ptr&lt;cv::UMat&gt; for argument 'src'
+</code></pre></div></div>
+
+<p>위에 있는 건 Sobel Edge Detection이지만 Canny나 Laplacian도 똑같은 에러가 뜬다.<br />
+웃기는 건 <code class="language-plaintext highlighter-rouge">Scikit-Image</code>로 적용한 <em>Prewitt</em>이나 <em>Roberts</em>는 문제없이 잘 된다는 것.</p>
+
+<p>구글링해봤을 때는 뭐 파일 경로가 잘못 되었다던가 했는데 skimage는 경로를 잘 인식하고 OpenCV는 못 한다는 법이 없지 않은가.</p>
+
+<p>어쨌든, 해결법은 <a href="https://docs.opencv.org/2.4/modules/imgproc/doc/feature_detection.html?highlight=canny#canny">OpenCV documentation</a>에서 찾았는데, <code class="language-plaintext highlighter-rouge">image</code>라는 입력 변수를 single-channel 8-bit image로만 받는다는 것이다.<br />
+Edge Detection을 하기 전에 이것 저것 하느라고 출력이 0~1 사이의 값을 가진 float32형태로 나왔는데, 이걸 OpenCV는 인식을 못 하고 Scikit-Image는 인식한다는 것이었다.</p>
+
+<p>따라서 이 문제를 해결하기 위해서는 단순히 데이터 형식을 uint8로 바꿔주면 된다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">img</span><span class="o">*</span><span class="mi">255</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>본인의 경우에는 img 변수가 0~1의 값을 가진 float32형태이므로 255를 곱한 후 uint8로 바꾸었다.</p>
+
+<ul>
+  <li>참고로, <code class="language-plaintext highlighter-rouge">Scikit-Image</code>의 경우 Float형식의 데이터를 지원하는 만큼 Edge Detection 시 np.nan값도 그냥 무시하면서 무난무난하게 넘어가는데, <code class="language-plaintext highlighter-rouge">OpenCV</code>의 경우 될 리가 없다. <code class="language-plaintext highlighter-rouge">Scikit-Image</code>가 갑자기 <code class="language-plaintext highlighter-rouge">OpenCV</code>보다 좋아보인다.</li>
+  <li>잠시 초보를 위한 설명을 하자면, int8과 uint8은 8개의 bit를 사용해서 정수를 표현하는 방식이다. bit는 0과 1 중 하나를 표현할 수 있는 컴퓨터 데이터 형식의 가장 작은 단위이며, 이게 8개가 있으므로 2**8=256개의 정수를 표현할 수 있다. 그리고 uint8은 0~255까지의 정수를 표현하며, int8은 bit 하나를 떼어 음수/양수를 표현하여 -128~127까지의 정수를 표현한다. 일반적인 JPEG나 PNG같은 이미지는 픽셀 하나의 채널 값 하나를 0~255로, 즉 uint8로 표현한다.</li>
+</ul>
+
+<h3 id="결론">결론</h3>
+<p><code class="language-plaintext highlighter-rouge">OpenCV</code>에서 <code class="language-plaintext highlighter-rouge">TypeError: Expected Ptr&lt;cv::UMat&gt; for argument 'src'</code> 에러가 뜬다면 이미지의 경로가 잘못 되지는 않았는지, 아니면 이미지의 형식이 uint인지 확인해보자.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#debugging" class="page__taxonomy-item" rel="tag">Debugging</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#etc" class="page__taxonomy-item" rel="tag">etc</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#opencv" class="page__taxonomy-item" rel="tag">OpenCV</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#python" class="page__taxonomy-item" rel="tag">PYthon</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#debugging" class="page__taxonomy-item" rel="tag">Debugging</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-09-27">September 27, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%5BOpen+CV%5D+Expected+Ptr%3Ccv%3A%3AUMat%3E+for+argument+%27src%27%20http%3A%2F%2F0.0.0.0%3A4000%2Fdebugging%2Fcv2_debug%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F0.0.0.0%3A4000%2Fdebugging%2Fcv2_debug%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A4000%2Fdebugging%2Fcv2_debug%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/debugging/jekyll_debug/" class="pagination--pager" title="[Jekyll] `load’: marshal data too short (ArgumentError) 디버깅
+">Previous</a>
+    
+    
+      <a href="/marine%20data%20analysis/pandas_1/" class="pagination--pager" title="Pandas를 이용한 데이터 분석(1)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/paperreview/EfficientNet/" rel="permalink">EfficientNet 논문 리뷰
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper]
+저자 : Mingxing Tan, Quoc V. Le
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/debugging/tf_memory_leak/" rel="permalink">텐서플로우 학습 시 메모리 누수 발생
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">요약
+쓰레기 수집을 Callback으로 넣어서 Epoch가 끝날 때마다 실행시켜주자
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/etcdask_tips/" rel="permalink">Dask 사용 팁
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">1. Multiprocessing을 디폴트로
+import dask
+dask.config.set(pool=Pool(12))
+dask.config.set(scheduler='processes')
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/marine%20data%20analysis/pandas_1/" rel="permalink">Pandas를 이용한 데이터 분석(1)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          11 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Pandas란 무엇인가?
+
+  pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Chase Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

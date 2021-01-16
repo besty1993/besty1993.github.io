@@ -1,0 +1,6 @@
+I"%<h1 id="1-multiprocessing을-디폴트로">1. Multiprocessing을 디폴트로</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import dask
+dask.config.set(pool=Pool(12))
+dask.config.set(scheduler='processes')
+</code></pre></div></div>
+:ET
