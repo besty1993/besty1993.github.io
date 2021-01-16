@@ -60,7 +60,7 @@ var store = [{
         "teaser": null
       },{
         "title": "EfficientNet 논문 리뷰",
-        "excerpt":"EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper] 저자 : Mingxing Tan, Quoc V. Le [latex_mathmatics] Summary Proposed ‘Compound Scaling Method’, which can scale ConvNet by efficiently balancing network Depth, Width, Image Resolution Proposed ‘EfficientNet’, which achieved SOTA accuracy with much more efficient model size and complexity Problems...","categories": ["PaperReview"],
+        "excerpt":"EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks [paper] 저자 : Mingxing Tan, Quoc V. Le Summary Proposed ‘Compound Scaling Method’, which can scale ConvNet by efficiently balancing network Depth, Width, Image Resolution Proposed ‘EfficientNet’, which achieved SOTA accuracy with much more efficient model size and complexity Problems to...","categories": ["PaperReview"],
         "tags": ["ImageClassification","DeepLearning","PaperReview","NAS","NetworkScaling"],
         "url": "http://0.0.0.0:4000/paperreview/EfficientNet/",
         "teaser": null

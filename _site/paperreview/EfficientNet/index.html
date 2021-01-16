@@ -136,33 +136,28 @@
   
     
       <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        TeX: {
-          equationNumbers: {
-            autoNumber: "AMS"
-          }
-        },
-        tex2jax: {
-        inlineMath: [ ['$', '$'] ],
-        displayMath: [ ['$$', '$$'] ],
-        processEscapes: true,
-      }
-    });
-    MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
-          alert("Math Processing Error: "+message[1]);
-        });
-    MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
-          alert("Math Processing Error: "+message[1]);
-        });
+MathJax.Hub.Config({
+    TeX: {
+    equationNumbers: {
+        autoNumber: "AMS"
+    }
+    },
+    tex2jax: {
+    inlineMath: [ ['$','$'], ["\(","\)"] ],
+    displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
+    processEscapes: true
+    }
+});
 </script>
 <script type="text/javascript" async
-    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
+
 
     
   </head>
 
-  <body class="layout--single wide">
+  <body class="layout--single narrow">
     <nav class="skip-links">
   <h2 class="screen-reader-text">Skip links</h2>
   <ul>
@@ -379,7 +374,7 @@
         <p>EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks <a href="https://arxiv.org/pdf/1905.11946.pdf">[paper]</a><br />
 저자 : Mingxing Tan, Quoc V. Le</p>
 
-<p><a href="https://en.wikipedia.org/wiki/Help:Displaying_a_formula#Formatting_using_TeX">[latex_mathmatics]</a></p>
+<!-- [[latex_mathmatics]](https://en.wikipedia.org/wiki/Help:Displaying_a_formula#Formatting_using_TeX) -->
 
 <h1 id="summary">Summary</h1>
 <ul>
@@ -439,13 +434,13 @@
   </li>
 </ul>
 
-\[max_{d,w,r} Accuracy(\mathcal{N}(d,w,r))\]
+\[max_{d,w,r} (Accuracy(\mathcal{N}(d,w,r)))\]
 
-\[s.t.\quad \quad   \mathcal{N}(d,w,r) = \bigodot _{i=1,...,s}\hat {\mathcal{F_i}}^{d \cdot \hat L_i}(X_{&lt;r\cdot \hat H_i,r\cdot \hat W_i,w\cdot \hat C_i&gt;})\]
+\[s.t.\quad \mathcal{N}(d,w,r) = \bigodot _{i=1,...,s}\hat {\mathcal{F_i}}^{d \cdot \hat L_i}(X_{&lt;r\cdot \hat H_i,r\cdot \hat W_i,w\cdot \hat C_i&gt;})\]
 
 \[\mathsf{Memory}(\mathcal{N}) \le \mathsf{TargetMemory} \quad \quad\]
 
-\[\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad \\]
+\[\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad\]
 
 <h2 id="scaling-dimensions">Scaling Dimensions</h2>
 
@@ -494,7 +489,7 @@
 
 <h2 id="efficientnet-architecture">EfficientNet Architecture</h2>
 <ul>
-  <li><strong>Compound Scaling Method</strong> does not change layer operators $\hat \mathcal{F_i}$ in baseline network but having a good baseline network is also critical</li>
+  <li><strong>Compound Scaling Method</strong> does not change layer operators $\hat {\mathcal{F_i}}$ in baseline network but having a good baseline network is also critical</li>
   <li>By NAS(Neural Architecture Search) to optimize accuracy and FLOPS, an accurate and efficient baseline is proposed</li>
   <li>Optimization goal : $ACC(m) \times [FLOPS(m)/T]^w$
     <ul>

@@ -1,0 +1,133 @@
+I"�<p>EfficientNet : Rethinking Model Scaling for Convolutional Neural Networks <a href="https://arxiv.org/pdf/1905.11946.pdf">[paper]</a><br />
+저자 : Mingxing Tan, Quoc V. Le</p>
+
+<!-- [[latex_mathmatics]](https://en.wikipedia.org/wiki/Help:Displaying_a_formula#Formatting_using_TeX) -->
+
+<h1 id="summary">Summary</h1>
+<ul>
+  <li>Proposed ‘Compound Scaling Method’, which can scale ConvNet by efficiently balancing network Depth, Width, Image Resolution</li>
+  <li>Proposed ‘EfficientNet’, which achieved SOTA accuracy with much more efficient model size and complexity</li>
+</ul>
+
+<h1 id="problems-to-solve">Problems to solve</h1>
+<ul>
+  <li>In previous work, it was common to scale only one of the three dimensions : depth, width, and image resolution
+    <blockquote>
+      <ul>
+        <li>Depth : The number of ConvNet layers</li>
+        <li>Width : The number of channels of each ConvNet layer</li>
+        <li>Image Resolution : Input image size(Height*Width)</li>
+      </ul>
+    </blockquote>
+  </li>
+  <li>Is there a principled method to scale up ConvNets that can achieve better accuracy and efficiency?</li>
+</ul>
+
+<p align="center">
+  <img src="/assets/images/EfficientNet/EfficientNetSample.PNG" />
+</p>
+
+<h1 id="compound-scaling-method">Compound Scaling Method</h1>
+<h2 id="problem-formulation">Problem Formulation</h2>
+
+<ul>
+  <li>Define ConvNet Layer $i$ as $Y_i = \mathcal{F_i}(X_i)$
+    <ul>
+      <li>where $Y_i$ : Output Tensor, $\mathcal{F_i}$ : Operator, $X_i$ : Input Tensor</li>
+      <li>$X_i$ is a tensor with shape of $(H_i, W_i, C_i)$, where $H_i, W_i, C_i$ is height, width, channel of the tensor, respectively</li>
+    </ul>
+  </li>
+  <li>A list of ConvNet layers is represented as </li>
+</ul>
+
+<p>\[
+\mathcal{F_k}\odot … \odot \mathcal{F_2} \odot \mathcal{F_1} = \bigodot _{j=1,…,k}\mathcal{F_j}(X_1)
+\]</p>
+
+<ul>
+  <li>Let’s consider a list of ConvNet layers as <em>block</em>, then ConvNet $N$ can be defined as</li>
+</ul>
+
+\[\mathcal{N}=\bigodot _{i=1,...,s}\mathcal{F_i}^{L_i}(X_{&lt;H_i,W_i,C_i&gt;})\]
+
+<ul>
+  <li>
+    <p>where $\mathcal{F_i}^{L_i}$ is $\mathcal{F_i}$ repeated $L_i$ times in stage $i$</p>
+  </li>
+  <li>Then, the target is <strong>to maximize the model accuracy for any given resource constraint</strong></li>
+  <li>In order to reduce the search space…
+    <ul>
+      <li>No architecture($\mathcal{F_i}$) changing</li>
+      <li>All layers must be scaled uniformly with constant ratio</li>
+    </ul>
+  </li>
+</ul>
+
+\[max_{d,w,r} Accuracy(\mathcal{N}(d,w,r))\]
+
+\[s.t.\quad \mathcal{N}(d,w,r) = \bigodot _{i=1,...,s}\hat {\mathcal{F_i}}^{d \cdot \hat L_i}(X_{&lt;r\cdot \hat H_i,r\cdot \hat W_i,w\cdot \hat C_i&gt;})\]
+
+\[\mathsf{Memory}(\mathcal{N}) \le \mathsf{TargetMemory} \quad \quad\]
+
+\[\mathsf{FLOPS}(\mathcal{N}) \le \mathsf{TargetFlops} \quad \quad \quad\]
+
+<h2 id="scaling-dimensions">Scaling Dimensions</h2>
+
+<ul>
+  <li>Deeper : Captures richer and more complex features</li>
+  <li>Wider : Captures more fine-grained features and easier to train</li>
+  <li>Higher Resolution : Captures more fine-grained patterns</li>
+</ul>
+
+<p align="center">
+  <img src="/assets/images/EfficientNet/OneDimensionScale.PNG" />
+</p>
+
+<ul>
+  <li>Scaling up any dimension of network improves accuracy, but <strong>the accuracy gain diminishes for bigger models</strong></li>
+</ul>
+
+<h2 id="compound-scaling">Compound Scaling</h2>
+<ul>
+  <li>Intuitively, higher resolution images deeper and wider network</li>
+  <li>To validate this intuition, they scaled network width w by fixing d and r</li>
+</ul>
+
+<p align="center">
+  <img src="/assets/images/EfficientNet/CompoundScaling.PNG" />
+</p>
+
+<ul>
+  <li>For better accuracy and efficiency, it is critical to <strong>balance the network width, depth, and resolution</strong></li>
+</ul>
+
+<h2 id="compound-scaling-method-1">Compound Scaling Method</h2>
+
+<p align="center">
+  <img src="/assets/images/EfficientNet/CSM.PNG" />
+</p>
+
+<ul>
+  <li>$\alpha, \beta, \gamma$ : constants to adjust the network depth, width, image resolution, respectively. These components are determined by a small grid search</li>
+  <li>$\phi$ : variable to decide how many resources to use for model scaling</li>
+  <li>FLOPS of ConvNet $\propto d, w^2, r^2 $</li>
+  <li>FLOPS of ConvNet $\propto (\alpha \cdot \beta^2 \cdot \gamma^2 )^\phi$</li>
+  <li>Set $\alpha \cdot \beta^2 \cdot \gamma^2 \approx 2$, so that the total FLOPS will increas approximately by $2^\phi$</li>
+  <li>Once $\alpha, \beta, \gamma$ are decided, the model scaling can be easily done only by adjusting $\phi$</li>
+</ul>
+
+<h2 id="efficientnet-architecture">EfficientNet Architecture</h2>
+<ul>
+  <li><strong>Compound Scaling Method</strong> does not change layer operators $\hat {\mathcal{F_i}}$ in baseline network but having a good baseline network is also critical</li>
+  <li>By NAS(Neural Architecture Search) to optimize accuracy and FLOPS, an accurate and efficient baseline is proposed</li>
+  <li>Optimization goal : $ACC(m) \times [FLOPS(m)/T]^w$
+    <ul>
+      <li>$ACC(m)$ : Accuracy of model $m$</li>
+      <li>$FLOPS(m)$ : FLOPS of model $m$</li>
+      <li>$T$ : Target FLOPS (Here, $T$ = 400 million)</li>
+      <li>$w$ : hyperparameter for trade-off (Here, $w=-0.07$)</li>
+    </ul>
+  </li>
+</ul>
+
+:ET
